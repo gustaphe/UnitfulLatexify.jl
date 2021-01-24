@@ -1,0 +1,12 @@
+\documentclass{standalone}
+\usepackage{siunitx}
+
+\begin{document}
+\begin{tabular}{rl}
+        \verb+latexify(612.2u"nm")+ & $612.2\;\mathrm{nm}$\\
+        \verb+latexify(u"m/s^2")+ & $\mathrm{m}\mathrm{s}^{-2}$\\
+        \verb+latexify(612.2u"nm",unitformat=:siunitx)+ & \SI{612.2}{\nano\meter}\\
+        \verb+latexify(u"m/s^2,unitformat=:siunitx)+ & \si{\meter\per\second\squared}\\
+\end{tabular}
+
+\end{document}

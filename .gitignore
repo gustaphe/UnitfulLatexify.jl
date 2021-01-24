@@ -1,1 +1,5 @@
 /Manifest.toml
+*.aux
+*.log
+*.out
+assets/examples.pdf
