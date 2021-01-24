@@ -24,7 +24,7 @@ julia> latexify(u,unitformat=:mathrm) # explicit default
 L"$\mathrm{kg}\mathrm{m}\mathrm{s}^{-2}$"
 
 julia> latexify(u,unitformat=:siunitx)
-L"\si{\kilogram\meter\per\second\tothe{2}}"
+L"\si{\kilo\gram\meter\per\second\tothe{2}}"
 ```
 
 The `unitformat` argument can be set as a default by `set_default(unitformat=:siunitx)`.
