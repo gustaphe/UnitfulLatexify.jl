@@ -12,7 +12,7 @@ julia> using Unitful, Latexify, UnitfulLatexify;
 
 julia> q = 612.2u"nm";
 
-julia> u = u"dm";
+julia> u = u"kg*m/s^2";
 
 julia> latexify(q)
 L"$612.2\;\mathrm{nm}$"
@@ -21,10 +21,10 @@ julia> latexify(q,unitformat=:siunitx)
 L"\SI{612.2}{\nano\meter}"
 
 julia> latexify(u,unitformat=:mathrm) # explicit default
-L"$\mathrm{mm}$"
+L"$\mathrm{kg}\mathrm{m}\mathrm{s}^{-2}$"
 
 julia> latexify(u,unitformat=:siunitx)
-L"\si{\milli\meter}"
+L"\si{\kilogram\meter\per\second\tothe{2}}"
 ```
 
 The `unitformat` argument can be set as a default by `set_default(unitformat=:siunitx)`.
