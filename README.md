@@ -31,3 +31,6 @@ The `unitformat` argument can be set as a default by `set_default(unitformat=:si
 
 ## Results
 ![Results](/assets/examples.png)
+
+## Extra notes
+Introduces dimensionless unit `u"one"`, which causes a `\num` command in `:siunitx` mode. This is for corner cases, and will have to be invoked manually.

@@ -1,9 +1,16 @@
 module UnitfulLatexify
 
-using Unitful: Unit, FreeUnits, Quantity, power, abbr, name, tens, sortexp, unit
+using Unitful: Unit, FreeUnits, Quantity, power, abbr, name, tens, sortexp, unit, @unit, register, NoDims
 using Latexify
 using LaTeXStrings
 
+function __init__()
+    register(UnitfulLatexify)
+end
+
+# #key:   Symbol  Display  Name      Equals      Prefixes?
+@unit     one     ""       One       1           false
+register(UnitfulLatexify)
 
 const prefixes = begin
     Dict(
@@ -50,6 +57,21 @@ const prefixes = begin
          (:siunitx,  21) => "\\zetta",
          (:siunitx,  24) => "\\yotta"
         )
+end
+
+@latexrecipe function f(q::T;unitformat=:mathrm) where T <: Quantity{N,NoDims,FreeUnits{(Unit{:One,NoDims}(0,1),),NoDims,nothing}} where N<:Number
+    if unitformat == :mathrm
+        env --> :inline
+        fmt --> FancyNumberFormatter()
+        return q.val
+    end
+    env --> :raw
+    return LaTeXString("\\num{$(
+                                latexify(q.val,env=:raw)
+                               )}")
+end
+@latexrecipe function f(p::T;unitformat=:mathrm) where T <: Unit{:One,NoDims}
+    return ""
 end
 
 @latexrecipe function f(p::T;unitformat=:mathrm) where T <: Unit
