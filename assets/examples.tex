@@ -4,7 +4,7 @@
 \begin{document}
 \begin{tabular}{rl}
         \verb+latexify(612.2u"nm")+ & $612.2\;\mathrm{nm}$\\
-        \verb+latexify(u"kg*m/s^2")+ & $\mathrm{m}\mathrm{s}^{-2}$\\
+        \verb+latexify(u"kg*m/s^2")+ & $\mathrm{kg}\mathrm{m}\mathrm{s}^{-2}$\\
         \verb+latexify(612.2u"nm",unitformat=:siunitx)+ & \SI{612.2}{\nano\meter}\\
         \verb+latexify(u"kg*m/s^2",unitformat=:siunitx)+ & \si{\kilo\gram\meter\per\second\tothe{2}}\\
 \end{tabular}
