@@ -1,6 +1,6 @@
 module UnitfulLatexify
 
-using Unitful: Unit, FreeUnits, Quantity, power, abbr, name, tens, sortexp, unit, @unit, register, NoDims
+using Unitful: Unitful, Unit, FreeUnits, Quantity, power, abbr, name, tens, sortexp, unit, @unit, register, NoDims
 using Latexify
 using LaTeXStrings
 
