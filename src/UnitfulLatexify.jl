@@ -70,6 +70,7 @@ end
                                 latexify(q.val,env=:raw)
                                )}")
 end
+
 @latexrecipe function f(p::T;unitformat=:mathrm) where T <: Unit{:One,NoDims}
     return ""
 end
