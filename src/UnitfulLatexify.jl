@@ -97,7 +97,9 @@ end
 end
 
 function listunits(::T;unitformat) where T <: FreeUnits
-    return prod(latexify.(sortexp(T.parameters[1]);unitformat,env=:raw))
+    return join(latexify.(sortexp(T.parameters[1]);unitformat,env=:raw),
+        unitformat==:mathrm ? "\\," : ""
+    )
 end
 
 @latexrecipe function f(u::T;unitformat=:mathrm) where T <: FreeUnits
