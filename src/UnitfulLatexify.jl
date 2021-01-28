@@ -67,7 +67,7 @@ end
     end
     env --> :raw
     return LaTeXString("\\num{$(
-                                latexify(q.val,env=:raw)
+                                latexraw(q.val;kwargs...)
                                )}")
 end
 
@@ -84,7 +84,7 @@ end
         if pow == 1//1
             expo = ""
         else
-            expo = "^{$(latexify(pow;env=:raw))}"
+            expo = "^{$(latexraw(pow;kwargs...,fmt="%g"))}"
         end
         return LaTeXString("\\mathrm{$prefix$unitname}$expo")
     end
@@ -92,41 +92,42 @@ end
     unitname = "\\$(lowercase(String(name(p))))"
     per = pow<0 ? "\\per" : ""
     pow = abs(pow)
-    expo = pow==1//1 ? "" : "\\tothe{$(latexify(pow;env=:raw))}"
+    expo = pow==1//1 ? "" : "\\tothe{$(latexraw(pow;kwargs...,fmt="%g"))}"
     return LaTeXString("$per$prefix$unitname$expo")
 end
 
-function listunits(::T;unitformat) where T <: FreeUnits
-    return join(latexify.(sortexp(T.parameters[1]);unitformat,env=:raw),
-        unitformat==:mathrm ? "\\," : ""
-    )
+function listunits(::T) where T <: FreeUnits
+    return sortexp(T.parameters[1])
 end
 
 @latexrecipe function f(u::T;unitformat=:mathrm) where T <: FreeUnits
     if unitformat == :mathrm
         env --> :inline
-        return LaTeXString(listunits(u;unitformat))
+        return LaTeXString(join(latexify.(listunits(u);kwargs...,env=:raw),"\\,"))
     end
     env --> :raw
-    return LaTeXString("\\si{$(listunits(u;unitformat))}")
+    return LaTeXString(join(("\\si{",latexify.(listunits(u);kwargs...,env=:raw)...,"}")))
 end
 
 @latexrecipe function f(q::T;unitformat=:mathrm) where T <: Quantity
     if unitformat == :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()
-        return LaTeXString("$(
-                              latexify(q.val,env=:raw)
-                             )\\;$(
-                                   listunits(unit(q);unitformat)
-                                  )")
+        return LaTeXString(join((latexraw(q.val;kwargs...),
+                                 "\\;",
+                                 join(
+                                      latexify.(listunits(unit(q));kwargs...,env=:raw),
+                                      "\\,"
+                                     )
+                                )))
     end
     env --> :raw
-    return LaTeXString("\\SI{$(
-                               latexify(q.val,env=:raw)
-                              )}{$(
-                                   listunits(unit(q);unitformat)
-                                  )}")
+    return LaTeXString(join(("\\SI{",
+                             latexraw(q.val;kwargs...),
+                             "}{",
+                             latexify.(listunits(unit(q));kwargs...,env=:raw)...,
+                             "}"
+                            )))
 end
 
 end
