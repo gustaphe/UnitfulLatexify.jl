@@ -5,6 +5,7 @@ using Latexify
 using LaTeXStrings
 
 import Latexify.latexify
+import Base.(:*)
 
 function __init__()
     register(UnitfulLatexify)
@@ -161,5 +162,7 @@ end
                              "}"
                             )))
 end
+
+*(q::Quantity,::FreeUnits{(Unit{:One,NoDims}(0,1),),NoDims,nothing}) = q
 
 end
