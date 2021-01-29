@@ -1,6 +1,6 @@
 module UnitfulLatexify
 
-using Unitful: Unitful, Unit, FreeUnits, Quantity, power, abbr, name, tens, sortexp, unit, @unit, register, NoDims
+using Unitful: Unitful, Unit, Units, Quantity, power, abbr, name, tens, sortexp, unit, @unit, register, NoDims
 using Latexify
 using LaTeXStrings
 
@@ -83,21 +83,6 @@ const prefixes = begin
         )
 end
 
-@latexrecipe function f(q::T;unitformat=:mathrm) where T <: Quantity{N,NoDims,FreeUnits{(Unit{:One,NoDims}(0,1),),NoDims,nothing}} where N<:Number
-    if unitformat == :mathrm
-        env --> :inline
-        fmt --> FancyNumberFormatter()
-        return q.val
-    end
-    env --> :raw
-    return LaTeXString("\\num{$(
-                                latexraw(q.val;kwargs...)
-                               )}")
-end
-
-@latexrecipe function f(p::T;unitformat=:mathrm) where T <: Unit{:One,NoDims}
-    return ""
-end
 
 @latexrecipe function f(p::T;unitformat=:mathrm) where T <: Unit
     prefix = prefixes[(unitformat, tens(p))]
@@ -126,11 +111,7 @@ end
     return LaTeXString("$per$prefix$unitname$expo")
 end
 
-function listunits(::T) where T <: FreeUnits
-    return sortexp(T.parameters[1])
-end
-
-@latexrecipe function f(u::T;unitformat=:mathrm) where T <: FreeUnits
+@latexrecipe function f(u::T;unitformat=:mathrm) where T <: Units
     if unitformat == :mathrm
         env --> :inline
         return LaTeXString(join(latexify.(listunits(u);kwargs...,env=:raw),"\\,"))
@@ -163,6 +144,31 @@ end
                             )))
 end
 
-*(q::Quantity,::FreeUnits{(Unit{:One,NoDims}(0,1),),NoDims,nothing}) = q
+function listunits(::T) where T <: Units
+    return sortexp(T.parameters[1])
+end
+
+
+@latexrecipe function f(p::T;unitformat=:mathrm) where T <: Unit{:One,NoDims}
+    return ""
+end
+
+@latexrecipe function f(p::T;unitformat=:mathrm) where T <: Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}
+    return ""
+end
+
+@latexrecipe function f(q::T;unitformat=:mathrm) where T <: Quantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}}
+    if unitformat == :mathrm
+        env --> :inline
+        fmt --> FancyNumberFormatter()
+        return q.val
+    end
+    env --> :raw
+    return LaTeXString("\\num{$(
+                                latexraw(q.val;kwargs...)
+                               )}")
+end
+
+*(q::Quantity,::Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}) = q
 
 end
