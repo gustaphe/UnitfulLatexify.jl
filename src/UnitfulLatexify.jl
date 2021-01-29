@@ -4,6 +4,8 @@ using Unitful: Unitful, Unit, FreeUnits, Quantity, power, abbr, name, tens, sort
 using Latexify
 using LaTeXStrings
 
+import Latexify.latexify
+
 function __init__()
     register(UnitfulLatexify)
 end
@@ -55,7 +57,28 @@ const prefixes = begin
          (:siunitx,  15) => "\\peta",
          (:siunitx,  18) => "\\exa",
          (:siunitx,  21) => "\\zetta",
-         (:siunitx,  24) => "\\yotta"
+         (:siunitx,  24) => "\\yotta",
+         (:siunitxsimple,  -24) => "y",
+         (:siunitxsimple,  -21) => "z",
+         (:siunitxsimple,  -18) => "a",
+         (:siunitxsimple,  -15) => "f",
+         (:siunitxsimple,  -12) => "p",
+         (:siunitxsimple,  -9 ) => "n",
+         (:siunitxsimple,  -6 ) => "\\u",
+         (:siunitxsimple,  -3 ) => "m",
+         (:siunitxsimple,  -2 ) => "c",
+         (:siunitxsimple,  -1 ) => "d",
+         (:siunitxsimple,   0 ) => "",
+         (:siunitxsimple,   1 ) => "D",
+         (:siunitxsimple,   2 ) => "h",
+         (:siunitxsimple,   3 ) => "k",
+         (:siunitxsimple,   6 ) => "M",
+         (:siunitxsimple,   9 ) => "G",
+         (:siunitxsimple,   12) => "T",
+         (:siunitxsimple,   15) => "P",
+         (:siunitxsimple,   18) => "E",
+         (:siunitxsimple,   21) => "Z",
+         (:siunitxsimple,   24) => "Y",
         )
 end
 
@@ -89,10 +112,16 @@ end
         return LaTeXString("\\mathrm{$prefix$unitname}$expo")
     end
     env --> :raw
-    unitname = "\\$(lowercase(String(name(p))))"
-    per = pow<0 ? "\\per" : ""
-    pow = abs(pow)
-    expo = pow==1//1 ? "" : "\\tothe{$(latexraw(pow;kwargs...,fmt="%g"))}"
+    if unitformat == :siunitx
+        unitname = "\\$(lowercase(String(name(p))))"
+        per = pow<0 ? "\\per" : ""
+        pow = abs(pow)
+        expo = pow==1//1 ? "" : "\\tothe{$(latexraw(pow;kwargs...,fmt="%g"))}"
+    else
+        unitname = abbr(p)
+        per = ""
+        expo = pow==1//1 ? "" : "^{$(latexraw(pow;kwargs...,fmt="%g"))}"
+    end
     return LaTeXString("$per$prefix$unitname$expo")
 end
 
@@ -106,7 +135,10 @@ end
         return LaTeXString(join(latexify.(listunits(u);kwargs...,env=:raw),"\\,"))
     end
     env --> :raw
-    return LaTeXString(join(("\\si{",latexify.(listunits(u);kwargs...,env=:raw)...,"}")))
+    if unitformat == :siunitx
+        return LaTeXString(join(("\\si{",latexify.(listunits(u);kwargs...,env=:raw)...,"}")))
+    end
+    return LaTeXString(join(("\\si{",join(latexify.(listunits(u);kwargs...,env=:raw),"."),"}")))
 end
 
 @latexrecipe function f(q::T;unitformat=:mathrm) where T <: Quantity

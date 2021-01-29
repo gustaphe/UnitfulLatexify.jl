@@ -1,6 +1,6 @@
-/Manifest.toml
-/test/Manifest.toml
+*Manifest.toml
 *.aux
 *.log
 *.out
 docs/examples.pdf
+docs/examples.tex
