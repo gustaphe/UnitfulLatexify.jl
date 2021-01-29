@@ -12,4 +12,4 @@ docs/examples.tex : docs/makedocs.jl
 	pushd docs; julia --project makedocs.jl
 
 clean :
-	$(RM) docs/examples.aux docs/examples.log docs/examples.pdf docs/examples.tex
+	$(RM) docs/*.aux docs/*.log docs/examples.pdf docs/examples.tex
