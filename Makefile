@@ -1,10 +1,13 @@
 .PHONY : clean
 
-assets/examples.png : assets/examples.pdf
+docs/examples.png : docs/examples.pdf
 	convert -fill white -opaque none -density 300 -quality 90 $< $@
 
-assets/examples.pdf : assets/examples.tex
-	xelatex --file-line-error --interaction=nonstopmode -output-directory assets $<
+docs/examples.pdf : docs/examples.tex
+	xelatex --file-line-error --interaction=nonstopmode -output-directory docs $<
+
+docs/examples.tex : docs/makedocs.jl
+	pushd docs; julia --project makedocs.jl
 
 clean :
-	$(RM) assets/examples.aux assets/examples.log assets/examples.pdf
+	$(RM) docs/examples.aux docs/examples.log docs/examples.pdf

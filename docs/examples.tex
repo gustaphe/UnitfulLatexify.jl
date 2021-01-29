@@ -1,0 +1,14 @@
+\documentclass{standalone}
+\usepackage{booktabs}
+\usepackage{siunitx}
+\begin{document}
+\begin{tabular}{lll}
+  \toprule
+  \textbf{\tt julia} & \textbf{\LaTeX} & \textbf{Result} \\\midrule
+  \verb+latexify(612.2 * u"nm")+ & \verb+$612.2\;\mathrm{nm}$+ & $612.2\;\mathrm{nm}$ \\
+  \verb+latexify(u"kg*m/s^2")+ & \verb+$\mathrm{kg}\,\mathrm{m}\,\mathrm{s}^{-2}$+ & $\mathrm{kg}\,\mathrm{m}\,\mathrm{s}^{-2}$ \\
+  \verb+latexify(612.2 * u"nm", unitformat = :siunitx)+ & \verb+\SI{612.2}{\nano\meter}+ & \SI{612.2}{\nano\meter} \\
+  \verb+latexify(u"kg*m/s^2", unitformat = :siunitx)+ & \verb+\si{\kilo\gram\meter\per\second\tothe{2}}+ & \si{\kilo\gram\meter\per\second\tothe{2}} \\
+  \verb+latexify(24 * u"one", unitformat = :siunitx)+ & \verb+\num{24}+ & \num{24} \\\bottomrule
+\end{tabular}
+\end{document}
