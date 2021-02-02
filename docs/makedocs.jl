@@ -14,11 +14,11 @@ commands = [
 
 open("examples.tex","w") do f
     print(f, """
-            \\documentclass{standalone}
-            \\usepackage{booktabs}
-            \\usepackage{siunitx}
-            \\begin{document}
-            """)
+          \\documentclass{standalone}
+          \\usepackage{booktabs}
+          \\usepackage{siunitx}
+          \\begin{document}
+          """)
     pretty_table(f,
                  hcat(
                       "\\verb+".*string.(commands).*"+",
@@ -28,6 +28,124 @@ open("examples.tex","w") do f
                  ["\\tt julia","\\LaTeX","Result"],
                  tf=tf_latex_booktabs,
                  alignment=[:l,:l,:l],
+                 wrap_table=false,
+                )
+    print(f,"""
+          \\end{document}
+          """)
+end
+
+# List manually imported from Unitful/src/pkgdefaults.jl
+# Could be automated by temporarily redefining @unit, @affineunit ... and include()ing this file.
+allunits = begin
+    uparse.([
+             "m",
+             "s",
+             "A",
+             "K",
+             "cd",
+             "g",
+             "mol",
+             "sr",
+             "rad",
+             "°",
+             "Hz",
+             "N",
+             "Pa",
+             "J",
+             "W",
+             "C",
+             "V",
+             "S",
+             "F",
+             "H",
+             "T",
+             "Wb",
+             "lm",
+             "lx",
+             "Bq",
+             "Gy",
+             "Sv",
+             "kat",
+             "percent",
+             "permille", # Undefined in all formats
+             "pertenthousand", # Undefined in all formats (butchered)
+             "°C", # Automatically turned into kelvin...
+             "minute",
+             "hr",
+             "d",
+             "wk", # Undefined in siunitx
+             "yr", # Undefined in siunitx
+             "rps", # Undefined in siunitx
+             "rpm", # Undefined in siunitx
+             "a", # Undefined in siunitx
+             "b",
+             "L",
+             "M", # Undefined in siunitx
+             "eV",
+             "Hz2π", # Butchered by encoding
+             "bar",
+             "atm", # Undefined in siunitx
+             "Torr", # Undefined in siunitx
+             "c", # Undefined in siunitx
+             "u", # Undefined in siunitx
+             "ge", # Undefined in siunitx
+             "Gal", # Undefined in siunitx
+             "dyn", # Undefined in siunitx
+             "erg", # Undefined in siunitx
+             "Ba", # Undefined in siunitx
+             "P", # Undefined in siunitx
+             "St", # Undefined in siunitx
+             #"Gauss", # errors in testing, maybe from Unitful.jl's dev branch?
+             #"Oe", # errors in testing, maybe from Unitful.jl's dev branch?
+             #"Mx", # errors in testing, maybe from Unitful.jl's dev branch?
+             "inch", # Undefined in siunitx
+             "mil", # Undefined in siunitx
+             "ft", # Undefined in siunitx
+             "yd", # Undefined in siunitx
+             "mi", # Undefined in siunitx
+             "angstrom", # Undefined in mathrm,siunitxsimple
+             "ac", # Undefined in siunitx
+             "Ra", # Undefined in siunitx
+             "lb", # Undefined in siunitx
+             "oz", # Undefined in siunitx
+             "slug", # Undefined in siunitx
+             "dr", # Undefined in siunitx
+             "gr", # Undefined in siunitx
+             "lbf", # Undefined in siunitx
+             "cal", # Undefined in siunitx
+             "btu", # Undefined in siunitx
+             "psi", # Undefined in siunitx
+             #"dBHz", # Cannot *yet* be latexified.
+             #"dBm", # Cannot *yet* be latexified.
+             #"dBV", # Cannot *yet* be latexified.
+             #"dBu", # Cannot *yet* be latexified.
+             #"dBμV", # Cannot *yet* be latexified.
+             #"dBSPL", # Cannot *yet* be latexified.
+             #"dBFS", # Cannot *yet* be latexified.
+             #"dBΩ", # Cannot *yet* be latexified.
+             #"dBS", # Cannot *yet* be latexified.
+            ])
+end
+
+
+open("allunits.tex","w") do f
+    print(f, """
+          \\documentclass{standalone}
+          \\usepackage{booktabs}
+          \\usepackage{siunitx}
+          \\begin{document}
+          """)
+    pretty_table(f,
+                 hcat(
+                      "\\verb+".*string.(allunits).*"+",
+                      latexify.(allunits,unitformat=:mathrm),
+                      latexify.(allunits,unitformat=:siunitx),
+                      latexify.(allunits,unitformat=:siunitxsimple),
+                     ),
+                 ["Name","\\tt :mathrm","\\tt :siunitx","\\tt :siunitxsimple"],
+                 tf=tf_latex_booktabs,
+                 #alignment=[:l :l :l :l],
                  wrap_table=false,
                 )
     print(f,"""

@@ -2,5 +2,5 @@
 *.aux
 *.log
 *.out
-docs/examples.pdf
-docs/examples.tex
+docs/*.pdf
+docs/*.tex

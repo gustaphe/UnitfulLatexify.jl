@@ -7,5 +7,8 @@ dictionary: `(unitformat::Symbol, name::Symbol) => unitname::String`
 const unitnames = begin
     Dict(
          (:mathrm, :Percent) => "\\%",
+         (:siunitxsimple, :Percent) => "\\%",
+         (:mathrm, :Degree) => "^{\\circ}",
+         (:siunitx, :eV) => "\\electronvolt",
         )
 end
