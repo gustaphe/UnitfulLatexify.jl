@@ -1,6 +1,6 @@
 module UnitfulLatexify
 
-using Unitful: Unitful, Unit, Units, Quantity, power, abbr, name, tens, sortexp, unit, @unit, register, NoDims
+using Unitful: Unitful, Unit, Units, Quantity, power, abbr, name, tens, sortexp, unit, @unit, register, NoDims, ustrip, @u_str
 using Latexify
 using LaTeXStrings
 
@@ -111,5 +111,20 @@ end
 end
 
 *(q::Quantity,::Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}) = q
+
+
+#@latexrecipe function f(a::AbstractArray{Quantity{N,D,U} where {D,U}}) where N<:Number
+# Array of quantities with different units
+#end
+
+@latexrecipe function f(a::AbstractArray{Quantity{N,D,U}};unitformat=:mathrm) where {N<:Number,D,U}
+    # Array of quantities with the same unit
+    env --> :equation
+    return LaTeXString(join(
+                            (latexarray((ustrip.(a).*u"one");
+                             kwargs...,unitformat),latexify(unit(a[1]);kwargs...,unitformat,env=:raw)),
+                             "\\;"
+                           ))
+end
 
 end
