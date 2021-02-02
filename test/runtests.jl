@@ -16,4 +16,5 @@ n = 6.02214076e23u"one"
     @test latexify(n) == L"$6.022 \cdot 10^{23}$"
     @test latexify(n,unitformat=:siunitx) == LaTeXString("\\num{6.02214076e23}")
     @test latexify(q,fmt="%.1e") == L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
+    @test latexify(u"percent") == L"$\mathrm{\%}$"
 end
