@@ -37,8 +37,15 @@ end
 
 # List manually imported from Unitful/src/pkgdefaults.jl
 # Could be automated by temporarily redefining @unit, @affineunit ... and include()ing this file.
+functions = [
+             x -> "\\verb+$(string(x))+",
+             x -> latexify.(x,unitformat=:mathrm),
+             x-> latexify.(x,unitformat=:siunitx),
+             x-> latexify(x,unitformat=:siunitxsimple),
+            ]
 allunits = begin
     uparse.([
+             "nH*m/Hz",
              "m",
              "s",
              "A",
@@ -137,12 +144,13 @@ open("allunits.tex","w") do f
           \\begin{document}
           """)
     pretty_table(f,
-                 hcat(
-                      "\\verb+".*string.(allunits).*"+",
-                      latexify.(allunits,unitformat=:mathrm),
-                      latexify.(allunits,unitformat=:siunitx),
-                      latexify.(allunits,unitformat=:siunitxsimple),
-                     ),
+                 [fun(s) for s in allunits, fun in functions],
+                 #hcat(
+                      #"\\verb+".*string.(allunits).*"+",
+                      #latexify.(allunits,unitformat=:mathrm),
+                      #latexify.(allunits,unitformat=:siunitx),
+                      #latexify.(allunits,unitformat=:siunitxsimple),
+                     #),
                  ["Name","\\tt :mathrm","\\tt :siunitx","\\tt :siunitxsimple"],
                  tf=tf_latex_booktabs,
                  #alignment=[:l :l :l :l],

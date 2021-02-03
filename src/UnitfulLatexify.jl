@@ -80,7 +80,8 @@ end
     return LaTeXString(join(("\\SI{",
                              latexraw(q.val;kwargs...),
                              "}{",
-                             latexify.(listunits(unit(q));kwargs...,env=:raw)...,
+                             join(latexify.(listunits(unit(q));kwargs...,env=:raw),
+                                 unitformat==:siunitxsimple ? "." : ""),
                              "}"
                             )))
 end
