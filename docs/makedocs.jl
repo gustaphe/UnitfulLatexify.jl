@@ -145,15 +145,9 @@ open("allunits.tex","w") do f
           """)
     pretty_table(f,
                  [fun(s) for s in allunits, fun in functions],
-                 #hcat(
-                      #"\\verb+".*string.(allunits).*"+",
-                      #latexify.(allunits,unitformat=:mathrm),
-                      #latexify.(allunits,unitformat=:siunitx),
-                      #latexify.(allunits,unitformat=:siunitxsimple),
-                     #),
                  ["Name","\\tt :mathrm","\\tt :siunitx","\\tt :siunitxsimple"],
                  tf=tf_latex_booktabs,
-                 #alignment=[:l :l :l :l],
+                 alignment=[:l,:l,:l,:l],
                  wrap_table=false,
                 )
     print(f,"""
