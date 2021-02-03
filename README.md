@@ -27,7 +27,7 @@ julia> latexify(u,unitformat=:siunitx)
 L"\si{\kilo\gram\meter\per\second\tothe{2}}"
 ```
 
-The `unitformat` argument can be set as a default by `set_default(unitformat=:siunitx)`.
+The `unitformat` argument can be set as a default by `set_default(unitformat=:siunitx)`. Implemented `unitformat`s are `:mathrm` (`1\;\mathrm{mm}`),`:siunitx` (`\SI{1}{\milli\meter}`) and `siunitxsimple` (`\SI{1}{mm}`), examples below and a more comprehensive image in docs/allunits.png.
 
 ## Results
 ![Results](/docs/examples.png)
