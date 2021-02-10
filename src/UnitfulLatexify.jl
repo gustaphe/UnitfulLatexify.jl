@@ -1,6 +1,6 @@
 module UnitfulLatexify
 
-using Unitful: Unitful, Unit, Units, Quantity, power, abbr, name, tens, sortexp, unit, @unit, register, NoDims
+using Unitful: Unitful, Unit, Units, Quantity, power, abbr, name, tens, sortexp, unit, @unit, register, NoDims, ustrip, @u_str
 using Latexify
 using LaTeXStrings
 
@@ -36,7 +36,7 @@ end
         if pow == 1//1
             expo = ""
         else
-            expo = "^{$(latexraw(pow;kwargs...,fmt="%g"))}"
+            expo = "^{$(latexify(pow;kwargs...,fmt="%g",env=:raw))}"
         end
         return LaTeXString("\\mathrm{$prefix$unitname}$expo")
     end
@@ -44,10 +44,10 @@ end
     if unitformat == :siunitx
         per = pow<0 ? "\\per" : ""
         pow = abs(pow)
-        expo = pow==1//1 ? "" : "\\tothe{$(latexraw(pow;kwargs...,fmt="%g"))}"
+        expo = pow==1//1 ? "" : "\\tothe{$(latexify(pow;kwargs...,fmt="%g",env=:raw))}"
     else
         per = ""
-        expo = pow==1//1 ? "" : "^{$(latexraw(pow;kwargs...,fmt="%g"))}"
+        expo = pow==1//1 ? "" : "^{$(latexify(pow;kwargs...,fmt="%g",env=:raw))}"
     end
     return LaTeXString("$per$prefix$unitname$expo")
 end
@@ -68,7 +68,7 @@ end
     if unitformat == :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()
-        return LaTeXString(join((latexraw(q.val;kwargs...),
+        return LaTeXString(join((latexify(q.val;kwargs...,env=:raw),
                                  "\\;",
                                  join(
                                       latexify.(listunits(unit(q));kwargs...,env=:raw),
@@ -78,7 +78,7 @@ end
     end
     env --> :raw
     return LaTeXString(join(("\\SI{",
-                             latexraw(q.val;kwargs...),
+                             latexify(q.val;kwargs...,env=:raw),
                              "}{",
                              join(latexify.(listunits(unit(q));kwargs...,env=:raw),
                                  unitformat==:siunitxsimple ? "." : ""),
@@ -107,10 +107,25 @@ end
     end
     env --> :raw
     return LaTeXString("\\num{$(
-                                latexraw(q.val;kwargs...)
+                                latexify(q.val;kwargs...,env=:raw)
                                )}")
 end
 
 *(q::Quantity,::Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}) = q
+
+
+#@latexrecipe function f(a::AbstractArray{Quantity{N,D,U} where {D,U}}) where N<:Number
+# Array of quantities with different units
+#end
+
+@latexrecipe function f(a::AbstractArray{Quantity{N,D,U}};unitformat=:mathrm) where {N<:Number,D,U}
+    # Array of quantities with the same unit
+    env --> :equation
+    return LaTeXString(join(
+                            (latexarray((ustrip.(a).*u"one");
+                             kwargs...,unitformat),latexify(unit(a[1]);kwargs...,unitformat,env=:raw)),
+                             "\\;"
+                           ))
+end
 
 end
