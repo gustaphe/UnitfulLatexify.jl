@@ -4,12 +4,15 @@ using LaTeXStrings, Unitful, Latexify, UnitfulLatexify, PrettyTables
 commands = [
             :(latexify(612.2u"nm")),
             :(latexify(u"kg*m/s^2")),
-            :(latexify(612.2u"nm",  unitformat=:siunitx)),
-            :(latexify(u"kg*m/s^2", unitformat=:siunitx)),
-            :(latexify(2.4e6u"one", unitformat=:siunitx)),
-            :(latexify(612.2u"nm",  unitformat=:siunitxsimple)),
-            :(latexify(u"kg*m/s^2", unitformat=:siunitxsimple)),
-            :(latexify(u"percent",  unitformat=:mathrm)),
+            :(latexify(612.2u"nm",      unitformat=:siunitx)),
+            :(latexify(u"kg*m/s^2",     unitformat=:siunitx)),
+            :(latexify(2.4e6u"one",     unitformat=:siunitx)),
+            :(latexify(612.2u"nm",      unitformat=:siunitxsimple)),
+            :(latexify(u"kg*m/s^2",     unitformat=:siunitxsimple)),
+            :(latexify(u"percent",      unitformat=:mathrm)),
+            :(latexify((1:5)u"m",       unitformat=:siunitx)),
+            :(latexify((1,2,4).*u"m",   unitformat=:siunitx)),
+            :(latexify((1,2,4).*u"one", unitformat=:siunitx)),
            ]
 
 open("examples.tex","w") do f
