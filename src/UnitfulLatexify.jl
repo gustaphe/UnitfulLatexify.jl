@@ -112,6 +112,8 @@ end
 end
 
 *(q::Quantity,::Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}) = q
+*(a::Quantity,b::T) where T <: Quantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}} = a*b.val
+*(b::T,a::Quantity) where T <: Quantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}} = b.val*a
 
 @latexrecipe function f(a::AbstractArray{Quantity{N,D,U}};unitformat=:mathrm) where {N<:Number,D,U}
     # Array of quantities with the same unit
