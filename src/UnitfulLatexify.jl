@@ -119,7 +119,7 @@ end
     return LaTeXString(join(
                             (
                              latexarray((ustrip.(a).*u"one");kwargs...,unitformat),
-                             latexify(unit(r.start);kwargs...,unitformat,env=:raw)
+                             latexify(unit(first(a));kwargs...,unitformat,env=:raw)
                             ),"\\;"
                            ))
 end
