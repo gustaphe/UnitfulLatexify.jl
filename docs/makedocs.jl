@@ -15,7 +15,7 @@ commands = [
     :(latexify((1, 2, 4) .* u"one"; unitformat=:siunitx)),
 ]
 
-open("examples.tex", "w") do f
+open(pkgdir(UnitfulLatexify)*"/docs/examples.tex", "w") do f
     print(
         f,
         """
@@ -87,7 +87,8 @@ allunits = begin
         "percent",
         "permille", # Undefined in all formats
         "pertenthousand", # Undefined in all formats (butchered)
-        "°C", # Automatically turned into kelvin...
+        "°C",
+        "°F",
         "minute",
         "hr",
         "d",
@@ -145,7 +146,7 @@ allunits = begin
     ])
 end
 
-open("allunits.tex", "w") do f
+open(pkgdir(UnitfulLatexify)*"/docs/allunits.tex", "w") do f
     print(
         f,
         """
