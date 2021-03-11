@@ -1,6 +1,6 @@
 module UnitfulLatexify
 
-using Unitful: Unitful, Unit, Units, Quantity, power, abbr, name, tens, sortexp, unit, @unit, register, NoDims, ustrip, @u_str
+using Unitful: Unitful, Unit, Units, AbstractQuantity, AffineUnits, AffineQuantity, power, abbr, name, tens, sortexp, unit, @unit, register, NoDims, ustrip, @u_str, genericunit
 using Latexify
 using LaTeXStrings
 
@@ -18,5 +18,6 @@ include("auxiliary.jl")
 include("default.jl")
 include("one.jl")
 include("arrays.jl")
+include("affine.jl")
 
 end

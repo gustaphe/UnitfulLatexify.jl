@@ -35,7 +35,7 @@ end
     return LaTeXString(join(("\\si{",join(latexify.(listunits(u);kwargs...,env=:raw),"."),"}")))
 end
 
-@latexrecipe function f(q::T;unitformat=:mathrm) where T <: Quantity
+@latexrecipe function f(q::T;unitformat=:mathrm) where T <: AbstractQuantity
     if unitformat == :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()

@@ -1,4 +1,4 @@
-@latexrecipe function f(a::AbstractArray{Quantity{N,D,U}};unitformat=:mathrm) where {N<:Number,D,U}
+@latexrecipe function f(a::AbstractArray{<:AbstractQuantity{N,D,U}};unitformat=:mathrm) where {N<:Number,D,U}
     # Array of quantities with the same unit
     env --> :equation
     return LaTeXString(join(
@@ -9,7 +9,7 @@
                            ))
 end
 
-@latexrecipe function f(r::AbstractRange{Quantity{N,D,U}};unitformat=:mathrm) where {N<:Number,D,U}
+@latexrecipe function f(r::AbstractRange{<:AbstractQuantity{N,D,U}};unitformat=:mathrm) where {N<:Number,D,U}
     if unitformat == :siunitx
         return LaTeXString(join((
                                  "\\SIrange{",
@@ -44,7 +44,7 @@ end
                            ))
 end
 
-@latexrecipe function f(r::T;unitformat=:mathrm) where T <: AbstractRange{Quantity{N,D,U}} where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}}
+@latexrecipe function f(r::T;unitformat=:mathrm) where T <: AbstractRange{<:AbstractQuantity{N,D,U}} where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}}
     if unitformat == :siunitx || unitformat == :siunitxsimple
         return LaTeXString(join((
                                  "\\numrange{",
@@ -59,7 +59,7 @@ end
 end
 
 
-@latexrecipe function f(l::Tuple{T,Vararg{T}};unitformat=:mathrm) where T <: Quantity{N,D,U} where {N<:Number,D,U}
+@latexrecipe function f(l::Tuple{T,Vararg{T}};unitformat=:mathrm) where T <: AbstractQuantity{N,D,U} where {N<:Number,D,U}
     if unitformat == :siunitx
         return LaTeXString(join(
                                 (
@@ -86,7 +86,7 @@ end
     return [l...]
 end
 
-@latexrecipe function f(l::Tuple{T,Vararg{T}};unitformat=:mathrm) where T <: Quantity{N,D,U} where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}}
+@latexrecipe function f(l::Tuple{T,Vararg{T}};unitformat=:mathrm) where T <: AbstractQuantity{N,D,U} where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0,1),),NoDims,nothing}}
     if unitformat == :siunitx || unitformat == :siunitxsimple
         return LaTeXString(join(
                                 (

@@ -17,4 +17,5 @@ n = 6.02214076e23u"one"
     @test latexify(n,unitformat=:siunitx) == LaTeXString("\\num{6.02214076e23}")
     @test latexify(q,fmt="%.1e") == L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
     @test latexify(u"percent") == L"$\mathrm{\%}$"
+    @test latexify(2u"°C") == L"$2\;\mathrm{^\circ C}$"
 end
