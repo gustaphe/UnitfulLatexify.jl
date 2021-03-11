@@ -1,4 +1,4 @@
-@latexrecipe function f(u::T; unitformat=:mathrm) where T <: AffineUnits
+@latexrecipe function f(u::T; unitformat=:mathrm) where {T<:AffineUnits}
     if u == Unitful.°C
         unitname = :Celsius
     elseif u == Unitful.°F
@@ -12,15 +12,10 @@
         return LaTeXString(unitnames[(unitformat, unitname)])
     end
     env --> :raw
-    return LaTeXString(string(
-                              "\\si{",
-                              unitnames[(unitformat, unitname)],
-                              "}"
-                             ))
+    return LaTeXString(string("\\si{", unitnames[(unitformat, unitname)], "}"))
 end
 
-
-@latexrecipe function f(q::T; unitformat =:mathrm) where T <: AffineQuantity
+@latexrecipe function f(q::T; unitformat=:mathrm) where {T<:AffineQuantity}
     u = unit(q)
     if u == Unitful.°C
         unitname = :Celsius
@@ -33,18 +28,23 @@ end
     if unitformat === :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()
-        return LaTeXString(join((latexify(q.val; kwargs..., env=:raw),
-                                 "\\;\\mathrm{",
-                                 unitnames[(unitformat, unitname)],
-                                 "}"
-                                )))
+        return LaTeXString(
+            join((
+                latexify(q.val; kwargs..., env=:raw),
+                "\\;\\mathrm{",
+                unitnames[(unitformat, unitname)],
+                "}",
+            )),
+        )
     end
     env --> :raw
-    return LaTeXString(join(("\\SI{",
-                             latexify(q.val; kwargs..., env=:raw),
-                             "}{",
-                             unitnames[(unitformat,unitname)],
-                             "}"
-                            )))
+    return LaTeXString(
+        join((
+            "\\SI{",
+            latexify(q.val; kwargs..., env=:raw),
+            "}{",
+            unitnames[(unitformat, unitname)],
+            "}",
+        )),
+    )
 end
-
