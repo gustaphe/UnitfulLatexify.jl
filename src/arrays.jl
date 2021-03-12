@@ -17,7 +17,7 @@ end
 @latexrecipe function f(
     r::AbstractRange{<:AbstractQuantity{N,D,U}}; unitformat=:mathrm
 ) where {N<:Number,D,U}
-    if unitformat == :siunitx
+    if unitformat === :siunitx
         return LaTeXString(
             join((
                 "\\SIrange{",
@@ -30,7 +30,7 @@ end
             )),
         )
     end
-    if unitformat == :siunitxsimple
+    if unitformat === :siunitxsimple
         return LaTeXString(
             join((
                 "\\SIrange{",
@@ -64,7 +64,7 @@ end
         <:AbstractQuantity{N,D,U}
     },
 } where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
-    if unitformat == :siunitx || unitformat == :siunitxsimple
+    if unitformat === :siunitx || unitformat == :siunitxsimple
         return LaTeXString(
             join((
                 "\\numrange{",
@@ -81,7 +81,7 @@ end
 @latexrecipe function f(
     l::Tuple{T,Vararg{T}}; unitformat=:mathrm
 ) where {T<:AbstractQuantity{N,D,U}} where {N<:Number,D,U}
-    if unitformat == :siunitx
+    if unitformat === :siunitx
         return LaTeXString(
             join((
                 "\\SIlist{",
@@ -92,7 +92,7 @@ end
             )),
         )
     end
-    if unitformat == :siunitxsimple
+    if unitformat === :siunitxsimple
         return LaTeXString(
             join((
                 "\\SIlist{",
@@ -116,7 +116,7 @@ end
         N,D,U
     },
 } where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
-    if unitformat == :siunitx || unitformat == :siunitxsimple
+    if unitformat === :siunitx || unitformat === :siunitxsimple
         return LaTeXString(
             join((
                 "\\numlist{",

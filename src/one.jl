@@ -32,7 +32,7 @@ end
 @latexrecipe function f(
     q::T; unitformat=:mathrm
 ) where {T<:AbstractQuantity{<:Number,NoDims,<:Units{(),NoDims,nothing}}}
-    if unitformat == :mathrm
+    if unitformat === :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()
         return q.val
@@ -48,7 +48,7 @@ end
 ) where {
     T<:AbstractQuantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}},
 }
-    if unitformat == :mathrm
+    if unitformat === :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()
         return q.val

@@ -2,7 +2,7 @@
     prefix = prefixes[(unitformat, tens(p))]
     pow = power(p)
     unitname = getunitname(p, unitformat)
-    if unitformat == :mathrm
+    if unitformat === :mathrm
         env --> :inline
         if pow == 1//1
             expo = ""
@@ -12,7 +12,7 @@
         return LaTeXString("\\mathrm{$prefix$unitname}$expo")
     end
     env --> :raw
-    if unitformat == :siunitx
+    if unitformat === :siunitx
         per = pow < 0 ? "\\per" : ""
         pow = abs(pow)
         expo = pow == 1//1 ? "" : "\\tothe{$(latexify(pow;kwargs...,fmt="%g",env=:raw))}"
@@ -24,12 +24,12 @@
 end
 
 @latexrecipe function f(u::T; unitformat=:mathrm) where {T<:Units}
-    if unitformat == :mathrm
+    if unitformat === :mathrm
         env --> :inline
         return LaTeXString(join(latexify.(listunits(u); kwargs..., env=:raw), "\\,"))
     end
     env --> :raw
-    if unitformat == :siunitx
+    if unitformat === :siunitx
         return LaTeXString(
             join(("\\si{", latexify.(listunits(u); kwargs..., env=:raw)..., "}"))
         )
@@ -40,7 +40,7 @@ end
 end
 
 @latexrecipe function f(q::T; unitformat=:mathrm) where {T<:AbstractQuantity}
-    if unitformat == :mathrm
+    if unitformat === :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()
         return LaTeXString(
@@ -59,7 +59,7 @@ end
             "}{",
             join(
                 latexify.(listunits(unit(q)); kwargs..., env=:raw),
-                unitformat == :siunitxsimple ? "." : "",
+                unitformat === :siunitxsimple ? "." : "",
             ),
             "}",
         )),
