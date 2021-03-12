@@ -46,7 +46,7 @@ end
         return LaTeXString(
             join((
                 latexify(q.val; kwargs..., env=:raw),
-                "\\;",
+                has_unit_spacing(unit(q)) ? "\\;" : "",
                 join(latexify.(listunits(unit(q)); kwargs..., env=:raw), "\\,"),
             )),
         )

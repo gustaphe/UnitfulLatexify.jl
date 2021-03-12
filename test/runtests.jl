@@ -21,5 +21,6 @@ n = 6.02214076e23u"one"
     @test latexify(q; fmt="%.1e") == L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
     @test latexify(u"percent") == L"$\mathrm{\%}$"
     @test latexify(2u"°C") == L"$2\;\mathrm{^\circ C}$"
+    @test latexify(1u"°") == L"$1\mathrm{^{\circ}}$"
     @test format(pkgdir(UnitfulLatexify), BlueStyle(); overwrite=false)
 end

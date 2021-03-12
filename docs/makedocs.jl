@@ -15,7 +15,7 @@ commands = [
     :(latexify((1, 2, 4) .* u"one"; unitformat=:siunitx)),
 ]
 
-open(pkgdir(UnitfulLatexify)*"/docs/examples.tex", "w") do f
+open(pkgdir(UnitfulLatexify) * "/docs/examples.tex", "w") do f
     print(
         f,
         """
@@ -146,7 +146,7 @@ allunits = begin
     ])
 end
 
-open(pkgdir(UnitfulLatexify)*"/docs/allunits.tex", "w") do f
+open(pkgdir(UnitfulLatexify) * "/docs/allunits.tex", "w") do f
     print(
         f,
         """

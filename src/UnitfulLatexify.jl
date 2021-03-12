@@ -18,7 +18,8 @@ using Unitful:
     NoDims,
     ustrip,
     @u_str,
-    genericunit
+    genericunit,
+    has_unit_spacing
 using Latexify
 using LaTeXStrings
 
