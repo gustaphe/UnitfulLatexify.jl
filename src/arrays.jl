@@ -6,10 +6,10 @@
     return LaTeXString(
         join(
             (
-                latexarray((ustrip.(a) .* u"one"); kwargs..., unitformat),
+                _latexarray((ustrip.(a) * u"one"); kwargs..., unitformat),
                 latexify(unit(first(a)); kwargs..., unitformat, env=:raw),
             ),
-            "\\;",
+            has_unit_spacing(first(a)) ? "\\;" : "",
         ),
     )
 end

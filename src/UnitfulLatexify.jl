@@ -20,8 +20,8 @@ using Unitful:
     @u_str,
     genericunit,
     has_unit_spacing
-using Latexify
-using LaTeXStrings
+using Latexify: Latexify, @latexrecipe, latexify, _latexarray, FancyNumberFormatter
+using LaTeXStrings: LaTeXString
 
 import Latexify.latexify
 import Base.(:*)
