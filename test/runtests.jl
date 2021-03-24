@@ -78,5 +78,9 @@ end
     )
     @test latexify(24.7e9u"Gm/s^2"; fmt="%.1e") ==
           L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
+    @test latexslashunitlabel("x", u"m") == "\$x\\;/\\;\\mathrm{m}\$"
+    @test latexroundunitlabel("x", u"m") == "\$x\\;\\left(\\mathrm{m}\\right)\$"
+    @test latexsquareunitlabel("x", u"m") == "\$x\\;\\left[\\mathrm{m}\\right]\$"
+    @test latexfracunitlabel("x", u"m") == "\$\\frac{x}{\\mathrm{m}}\$"
     @test format(pkgdir(UnitfulLatexify), BlueStyle(); overwrite=false)
 end

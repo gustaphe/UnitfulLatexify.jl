@@ -20,11 +20,14 @@ using Unitful:
     @u_str,
     genericunit,
     has_unit_spacing
-using Latexify: Latexify, @latexrecipe, latexify, _latexarray, FancyNumberFormatter
+using Latexify:
+    Latexify, @latexrecipe, latexify, _latexarray, FancyNumberFormatter, latexraw
 using LaTeXStrings: LaTeXString
 
 import Latexify.latexify
 import Base.(:*)
+
+export latexslashunitlabel, latexroundunitlabel, latexsquareunitlabel, latexfracunitlabel
 
 function __init__()
     return register(UnitfulLatexify)
@@ -38,5 +41,6 @@ include("default.jl")
 include("one.jl")
 include("arrays.jl")
 include("affine.jl")
+include("label.jl")
 
 end
