@@ -36,8 +36,21 @@ L"\si{\kilo\gram\meter\per\second\tothe{2}}"
 
 The `unitformat` argument can be set as a default by `set_default(unitformat=:siunitx)`. Implemented `unitformat`s are `:mathrm` (`1\;\mathrm{mm}`),`:siunitx` (`\SI{1}{\milli\meter}`) and `siunitxsimple` (`\SI{1}{mm}`), examples below and a more comprehensive image in docs/allunits.png.
 
+
 ## Results
 ![Results](/docs/examples.png)
+
+## Labels
+when plotting unitful quantities using `UnitfulRecipes`, you can supply a keyword `unitformat` (coincidentally), which determines how the axis guides are printed. In service of this, `UnitfulLatexify.jl` exports these functions:
+
+| function | format (applied to `("x", u"m")` |
+| ---- | ---- |
+| `latexslashunitlabel` | ``x\;/\;\mathrm{m}`` |
+| `latexroundunitlabel` | ``x\;\left(\mathrm{m}\right)`` |
+| `latexsquareunitlabel` | ``x\;\left[\mathrm{m}\right]`` |
+| `latexfracunitlabel` | ``\frac{x}{\mathrm{m}}`` |
+
+Simply supply this when plotting: `plot(x, y; xlabel="x", unitformat=latexslashunitlabel)`.
 
 ## Extra notes
 Introduces dimensionless unit `u"one"`, which causes a `\num` command in `:siunitx` mode. This is for corner cases, and will have to be invoked manually.
