@@ -43,7 +43,7 @@ The `unitformat` argument can be set as a default by `set_default(unitformat=:si
 ## Labels
 when plotting unitful quantities using `UnitfulRecipes`, you can supply a keyword `unitformat` (coincidentally), which determines how the axis guides are printed. In service of this, `UnitfulLatexify.jl` exports these functions:
 
-| function | format (applied to `("x", u"m")` |
+| function | format (applied to `("x", u"m")`) |
 | ---- | ---- |
 | `latexslashunitlabel` | ``x\;/\;\mathrm{m}`` |
 | `latexroundunitlabel` | ``x\;\left(\mathrm{m}\right)`` |
