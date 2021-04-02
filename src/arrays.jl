@@ -32,6 +32,7 @@ end
     unitformat=:mathrm,
 ) where {N<:Number,D,U}
     if unitformat in (:siunitx, :siunitxsimple)
+        env --> :raw
         return Expr(
             :latexifymerge,
             "\\SIrange{",
@@ -43,6 +44,7 @@ end
             "}",
         )
     end
+    env --> :inline
     return collect(r)
 end
 
@@ -55,8 +57,10 @@ end
     },
 } where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
     if unitformat in (:siunitx, :siunitxsimple)
+        env --> :raw
         return Expr(:latexifymerge, "\\numrange{", r.start.val, "}{", r.stop.val, "}")
     end
+    env --> :inline
     return ustrip.(r)
 end
 
@@ -65,6 +69,7 @@ end
     unitformat=:mathrm,
 ) where {T<:AbstractQuantity{N,D,U}} where {N<:Number,D,U}
     if unitformat in (:siunitx, :siunitxsimple)
+        env --> :raw
         return Expr(
             :latexifymerge,
             "\\SIlist{",
@@ -74,6 +79,7 @@ end
             "}",
         )
     end
+    env --> :inline
     return collect(l)
 end
 
@@ -86,7 +92,9 @@ end
     },
 } where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
     if unitformat in (:siunitx, :siunitxsimple)
+        env --> :raw
         return Expr(:latexifymerge, "\\numlist{", intersperse(ustrip.(l), ";")..., "}")
     end
+    env --> :inline
     return ustrip.(l)
 end
