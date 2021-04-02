@@ -10,3 +10,28 @@ end
 function listunits(::T) where {T<:Units}
     return sortexp(T.parameters[1])
 end
+
+"""
+```julia
+intersperse(t, delim)
+```
+Create a vector whose elements alternate between the elements of `t` and `delim`, analogous
+to `join` for strings.
+
+# Example
+```julia
+julia> intersperse((1, 2, 3, 4), :a)
+[1, :a, 2, :a, 3, :a, 4]
+```
+"""
+function intersperse(t::T, delim::U) where {T,U}
+    L = length(t) * 2 - 1
+    out = Vector{Union{typeof.(t)...,U}}(undef, L)
+    out[1:2:L] .= t
+    out[2:2:L] .= delim
+    return out
+end
+
+struct NakedUnits
+    u::Units
+end

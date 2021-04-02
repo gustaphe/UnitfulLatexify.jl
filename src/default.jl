@@ -26,42 +26,34 @@ end
 @latexrecipe function f(u::T; unitformat=:mathrm) where {T<:Units}
     if unitformat === :mathrm
         env --> :inline
-        return LaTeXString(join(latexify.(listunits(u); kwargs..., env=:raw), "\\,"))
+        return Expr(:latexifymerge, NakedUnits(u))
     end
     env --> :raw
-    if unitformat === :siunitx
-        return LaTeXString(
-            join(("\\si{", latexify.(listunits(u); kwargs..., env=:raw)..., "}"))
-        )
-    end
-    return LaTeXString(
-        join(("\\si{", join(latexify.(listunits(u); kwargs..., env=:raw), "."), "}"))
-    )
+    return Expr(:latexifymerge, "\\si{", NakedUnits(u), "}")
 end
 
 @latexrecipe function f(q::T; unitformat=:mathrm) where {T<:AbstractQuantity}
     if unitformat === :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()
-        return LaTeXString(
-            join((
-                latexify(q.val; kwargs..., env=:raw),
-                has_unit_spacing(unit(q)) ? "\\;" : "",
-                join(latexify.(listunits(unit(q)); kwargs..., env=:raw), "\\,"),
-            )),
+        return Expr(
+            :latexifymerge,
+            q.val,
+            has_unit_spacing(unit(q)) ? "\\;" : nothing,
+            NakedUnits(unit(q)),
         )
     end
     env --> :raw
-    return LaTeXString(
-        join((
-            "\\SI{",
-            latexify(q.val; kwargs..., env=:raw),
-            "}{",
-            join(
-                latexify.(listunits(unit(q)); kwargs..., env=:raw),
-                unitformat === :siunitxsimple ? "." : "",
-            ),
-            "}",
-        )),
-    )
+    return Expr(:latexifymerge, "\\SI{", q.val, "}{", NakedUnits(unit(q)), "}")
 end
+
+struct NakedUnits
+    u::Units
+end
+@latexrecipe function f(u::T; unitformat=:mathrm) where {T<:NakedUnits}
+    return Expr(:latexifymerge, intersperse(listunits(u.u), delimiters[unitformat])...)
+end
+
+const delimiters = Dict{Symbol,String}(
+    :mathrm => "\\,", :siunitx => "", :siunitxsimple => "."
+)

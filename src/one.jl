@@ -35,12 +35,10 @@ end
     if unitformat === :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()
-        return q.val
+        return ustrip(q)
     end
     env --> :raw
-    return LaTeXString("\\num{$(
-                                latexify(q.val;kwargs...,env=:raw)
-                               )}")
+    return Expr(:latexifymerge, "\\num{", ustrip(q), "}")
 end
 
 @latexrecipe function f(
@@ -51,10 +49,8 @@ end
     if unitformat === :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()
-        return q.val
+        return ustrip(q)
     end
     env --> :raw
-    return LaTeXString("\\num{$(
-                                latexify(q.val;kwargs...,env=:raw)
-                               )}")
+    return Expr(:latexifymerge, "\\num{", ustrip(q), "}")
 end

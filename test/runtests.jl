@@ -32,13 +32,10 @@ end
     )
     unitfullatexifytest(u"percent", raw"$\mathrm{\%}$", raw"\si{\percent}", raw"\si{\%}")
     unitfullatexifytest(
-        2u"°C",
-        raw"$2\;\mathrm{^\circ C}$",
-        raw"\SI{2}{\celsius}",
-        raw"\SI{2}{degreeCelsius}",
+        2u"°C", raw"$2\;\mathrm{^\circ C}$", raw"\SI{2}{\celsius}", raw"\SI{2}{\celsius}"
     )
     unitfullatexifytest(
-        1u"°", raw"$1\mathrm{^{\circ}}$", raw"\SI{1}{\degree}", raw"\SI{1}{°}"
+        1u"°", raw"$1\mathrm{^{\circ}}$", raw"\SI{1}{\degree}", raw"\SI{1}{\degree}"
     )
     unitfullatexifytest(
         [1, 2, 3]u"m",
@@ -82,5 +79,7 @@ end
     @test latexroundunitlabel("x", u"m") == "\$x\\;\\left(\\mathrm{m}\\right)\$"
     @test latexsquareunitlabel("x", u"m") == "\$x\\;\\left[\\mathrm{m}\\right]\$"
     @test latexfracunitlabel("x", u"m") == "\$\\frac{x}{\\mathrm{m}}\$"
-    @test format(pkgdir(UnitfulLatexify), BlueStyle(); overwrite=false)
+end
+@testset "Format" begin
+    @test format(UnitfulLatexify; overwrite=false)
 end

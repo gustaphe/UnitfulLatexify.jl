@@ -7,6 +7,6 @@ Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
 LaTeXStrings = "1.2.0"
-Latexify = "0.14.7"
+Latexify = "0.15.0"
 Unitful = "1.5.0"
 julia = "1"

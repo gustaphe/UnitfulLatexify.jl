@@ -13,9 +13,9 @@ const unitnames = begin
         (:mathrm, :Ohm) => "\\Omega",
         (:mathrm, :Celsius) => "^\\circ C",
         (:siunitx, :Celsius) => "\\celsius",
-        (:siunitxsimple, :Celsius) => "degreeCelsius",
-        (:mathrm, :Fahrenheit) => "^\\circ C",
+        (:siunitxsimple, :Celsius) => "\\celsius",
+        (:mathrm, :Fahrenheit) => "^\\circ F",
         (:siunitx, :Fahrenheit) => "\\fahrenheit",
-        (:siunitxsimple, :Fahrenheit) => "degreeFahrenheit",
+        (:siunitxsimple, :Fahrenheit) => "\\fahrenheits",
     )
 end

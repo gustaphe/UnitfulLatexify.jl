@@ -12,7 +12,7 @@
         return LaTeXString(unitnames[(unitformat, unitname)])
     end
     env --> :raw
-    return LaTeXString(string("\\si{", unitnames[(unitformat, unitname)], "}"))
+    return Expr(:latexifymerge, "\\si{", unitnames[(unitformat, unitname)], "}")
 end
 
 @latexrecipe function f(q::T; unitformat=:mathrm) where {T<:AffineQuantity}
@@ -28,23 +28,12 @@ end
     if unitformat === :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()
-        return LaTeXString(
-            join((
-                latexify(q.val; kwargs..., env=:raw),
-                "\\;\\mathrm{",
-                unitnames[(unitformat, unitname)],
-                "}",
-            )),
+        return Expr(
+            :latexifymerge, q.val, "\\;\\mathrm{", unitnames[(unitformat, unitname)], "}"
         )
     end
     env --> :raw
-    return LaTeXString(
-        join((
-            "\\SI{",
-            latexify(q.val; kwargs..., env=:raw),
-            "}{",
-            unitnames[(unitformat, unitname)],
-            "}",
-        )),
+    return Expr(
+        :latexifymerge, "\\SI{", q.val, "}{", unitnames[(unitformat, unitname)], "}"
     )
 end
