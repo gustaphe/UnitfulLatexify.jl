@@ -75,11 +75,18 @@ end
     )
     @test latexify(24.7e9u"Gm/s^2"; fmt="%.1e") ==
           L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
-    @test latexslashunitlabel("x", u"m") == "\$x\\;/\\;\\mathrm{m}\$"
-    @test latexroundunitlabel("x", u"m") == "\$x\\;\\left(\\mathrm{m}\\right)\$"
-    @test latexsquareunitlabel("x", u"m") == "\$x\\;\\left[\\mathrm{m}\\right]\$"
-    @test latexfracunitlabel("x", u"m") == "\$\\frac{x}{\\mathrm{m}}\$"
+    @testset "Labels" begin
+        @test latexslashunitlabel("x", u"m") == "\$x\\;/\\;\\mathrm{m}\$"
+        @test latexroundunitlabel("x", u"m") == "\$x\\;\\left(\\mathrm{m}\\right)\$"
+        @test latexsquareunitlabel("x", u"m") == "\$x\\;\\left[\\mathrm{m}\\right]\$"
+        @test latexfracunitlabel("x", u"m") == "\$\\frac{x}{\\mathrm{m}}\$"
+        @test latexify("x", u"m") == "\$x\\;/\\;\\mathrm{m}\$"
+    end
 end
-@testset "Format" begin
-    @test format(UnitfulLatexify; overwrite=false)
-end
+
+format(UnitfulLatexify; overwrite=false) || @warn """
+Code is not formatted correctly. Please run
+```
+julia> using JuliaFormatter, UnitfulLatexify; format(UnitfulLatexify)
+```.
+"""
