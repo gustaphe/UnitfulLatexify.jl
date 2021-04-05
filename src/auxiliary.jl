@@ -31,7 +31,3 @@ function intersperse(t::T, delim::U) where {T,U}
     out[2:2:L] .= delim
     return out
 end
-
-struct NakedUnits
-    u::Units
-end

@@ -1,5 +1,12 @@
 #!/bin/julia
+
+# premake.jl
+# Run locally (rarely) to generate a couple of figures needed by the
+# documentation
+
 using LaTeXStrings, Unitful, Latexify, UnitfulLatexify, PrettyTables
+
+dir = mktempdir(; cleanup=false)
 
 commands = [
     :(latexify(612.2u"nm")),
@@ -15,15 +22,15 @@ commands = [
     :(latexify((1, 2, 4) .* u"one"; unitformat=:siunitx)),
 ]
 
-open(pkgdir(UnitfulLatexify) * "/docs/examples.tex", "w") do f
+open(joinpath(dir, "examples.tex"), "w") do f
     print(
         f,
         """
-     \\documentclass{standalone}
-     \\usepackage{booktabs}
-     \\usepackage{siunitx}
-     \\begin{document}
-     """,
+        \\documentclass{standalone}
+        \\usepackage{booktabs}
+        \\usepackage{siunitx}
+        \\begin{document}
+        """,
     )
     pretty_table(
         f,
@@ -40,8 +47,8 @@ open(pkgdir(UnitfulLatexify) * "/docs/examples.tex", "w") do f
     print(
         f,
         """
-      \\end{document}
-      """,
+        \\end{document}
+        """,
     )
 end
 
@@ -146,15 +153,15 @@ allunits = begin
     ])
 end
 
-open(pkgdir(UnitfulLatexify) * "/docs/allunits.tex", "w") do f
+open(joinpath(dir, "allunits.tex"), "w") do f
     print(
         f,
         """
-     \\documentclass{standalone}
-     \\usepackage{booktabs}
-     \\usepackage{siunitx}
-     \\begin{document}
-     """,
+        \\documentclass{standalone}
+        \\usepackage{booktabs}
+        \\usepackage{siunitx}
+        \\begin{document}
+        """,
     )
     pretty_table(
         f,
@@ -167,7 +174,23 @@ open(pkgdir(UnitfulLatexify) * "/docs/allunits.tex", "w") do f
     print(
         f,
         """
-      \\end{document}
-      """,
+        \\end{document}
+        """,
     )
+end
+
+for s in ["examples", "allunits"]
+    try
+        run(
+            `xelatex -interaction=nonstopmode -output-directory $dir $(joinpath(dir,s*".tex"))`,
+        )
+    catch
+    end
+
+    try
+        run(
+            `convert -fill white -opaque none -density 600 -quality 90 $(joinpath(dir,s*".pdf")) $(joinpath(pkgdir(UnitfulLatexify),"docs","src","assets",s*".png"))`,
+        )
+    catch
+    end
 end

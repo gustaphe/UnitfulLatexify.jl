@@ -1,11 +1,15 @@
-latexslashunitlabel(l, u; kwargs...) = "\$$l\\;/\\;$(latexify(u; kwargs..., env=:raw))\$"
+function latexslashunitlabel(l, u; kwargs...)
+    return LaTeXString("\$$l\\;/\\;$(latexify(u; kwargs..., env=:raw))\$")
+end
 function latexroundunitlabel(l, u; kwargs...)
-    return "\$$l\\;\\left($(latexify(u; kwargs..., env=:raw))\\right)\$"
+    return LaTeXString("\$$l\\;\\left($(latexify(u; kwargs..., env=:raw))\\right)\$")
 end
 function latexsquareunitlabel(l, u; kwargs...)
-    return "\$$l\\;\\left[$(latexify(u; kwargs..., env=:raw))\\right]\$"
+    return LaTeXString("\$$l\\;\\left[$(latexify(u; kwargs..., env=:raw))\\right]\$")
 end
-latexfracunitlabel(l, u; kwargs...) = "\$\\frac{$l}{$(latexify(u; kwargs..., env=:raw))}\$"
+function latexfracunitlabel(l, u; kwargs...)
+    return LaTeXString("\$\\frac{$l}{$(latexify(u; kwargs..., env=:raw))}\$")
+end
 
 @latexrecipe function f(l::AbstractString, u::Units)
     return Expr(:latexifymerge, l, "\\;/\\;", u)
