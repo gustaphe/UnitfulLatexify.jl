@@ -22,7 +22,7 @@ end
 } where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
     env --> :equation
     if unitformat in (:siunitx, :siunitxsimple)
-        return latexify.(a; kwargs..., unitformat, env=:raw)
+        return latexify.(a; kwargs..., unitformat=unitformat, env=:raw)
     end
     return ustrip.(a)
 end
