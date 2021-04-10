@@ -11,7 +11,7 @@ function unitfullatexifytest(val, mathrmexpected, siunitxexpected, siunitxsimple
     @test latexify(val; unitformat=:siunitxsimple) == LaTeXString(siunitxsimpleexpected)
 end
 
-@testset "UnitfulLatexify.jl" begin
+@testset "Latexify units" begin
     unitfullatexifytest(
         u"H*J/kg",
         raw"$\mathrm{H}\,\mathrm{J}\,\mathrm{kg}^{-1}$",
@@ -75,13 +75,33 @@ end
     )
     @test latexify(24.7e9u"Gm/s^2"; fmt="%.1e") ==
           L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
-    @testset "Labels" begin
-        @test latexslashunitlabel("x", u"m") == "\$x\\;/\\;\\mathrm{m}\$"
-        @test latexroundunitlabel("x", u"m") == "\$x\\;\\left(\\mathrm{m}\\right)\$"
-        @test latexsquareunitlabel("x", u"m") == "\$x\\;\\left[\\mathrm{m}\\right]\$"
-        @test latexfracunitlabel("x", u"m") == "\$\\frac{x}{\\mathrm{m}}\$"
-        @test latexify("x", u"m") == "\$x\\;/\\;\\mathrm{m}\$"
-    end
+end
+
+@testset "permode" begin
+    p = 5u"m^3*s^2/H/kg^4"
+    @test latexify(p) == LaTeXString(
+        raw"$5\;\mathrm{m}^{3}\,\mathrm{s}^{2}\,\mathrm{kg}^{-4}\,\mathrm{H}^{-1}$"
+    )
+    @test latexify(p; permode=:power) == LaTeXString(
+        raw"$5\;\mathrm{m}^{3}\,\mathrm{s}^{2}\,\mathrm{kg}^{-4}\,\mathrm{H}^{-1}$"
+    )
+    @test latexify(p; permode=:slash) == LaTeXString(
+        raw"$5\;\mathrm{m}^{3}\,\mathrm{s}^{2}\,/\,\mathrm{kg}^{4}\,\mathrm{H}$"
+    )
+    @test latexify(p; permode=:frac) == LaTeXString(
+        raw"$5\;\frac{\mathrm{m}^{3}\,\mathrm{s}^{2}}{\mathrm{kg}^{4}\,\mathrm{H}}$"
+    )
+    @test latexify(p; unitformat=:siunitx, permode=:frac) ==
+          latexify(p; unitformat=:siunitx)
+    @test_throws ErrorException latexify(p; permode=:wrogn)
+end
+
+@testset "Labels" begin
+    @test latexslashunitlabel("x", u"m") == "\$x\\;/\\;\\mathrm{m}\$"
+    @test latexroundunitlabel("x", u"m") == "\$x\\;\\left(\\mathrm{m}\\right)\$"
+    @test latexsquareunitlabel("x", u"m") == "\$x\\;\\left[\\mathrm{m}\\right]\$"
+    @test latexfracunitlabel("x", u"m") == "\$\\frac{x}{\\mathrm{m}}\$"
+    @test latexify("x", u"m") == "\$x\\;/\\;\\mathrm{m}\$"
 end
 
 format(UnitfulLatexify; overwrite=false) || @warn """

@@ -129,6 +129,14 @@ plot(
 )
 ```
 
+## Per-modes
+In mathrm-mode, one might prefer ``\mathrm{J}\,/\,\mathrm{kg}`` or
+``\frac{\mathrm{J}}{\mathrm{kg}}`` over ``\mathrm{J}\,\mathrm{kg}^{-1}``. This can be achieved by
+supplying `permode=:slash` or `permode=:frac` respectively.
+
+These will have no effect in `siunitx` mode, because the latex package handles
+this for you, and you can set it in your document.
+
 ## A more complete list of defined units
 Below is a poorly scraped list of units defined in `siunitx` and what comes out
 if you run it through `latexify`. Feel free to create an issue if there's a

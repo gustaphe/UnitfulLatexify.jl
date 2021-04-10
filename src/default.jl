@@ -7,7 +7,7 @@
         if pow == 1//1
             expo = ""
         else
-            expo = "^{$(latexify(pow;kwargs...,fmt="%g",env=:raw))}"
+            expo = "^{$(latexify(pow; kwargs..., fmt="%g", env=:raw))}"
         end
         return LaTeXString("\\mathrm{$prefix$unitname}$expo")
     end
@@ -15,15 +15,15 @@
     if unitformat === :siunitx
         per = pow < 0 ? "\\per" : ""
         pow = abs(pow)
-        expo = pow == 1//1 ? "" : "\\tothe{$(latexify(pow;kwargs...,fmt="%g",env=:raw))}"
+        expo = pow == 1//1 ? "" : "\\tothe{$(latexify(pow; kwargs..., fmt="%g", env=:raw))}"
     else
         per = ""
-        expo = pow == 1//1 ? "" : "^{$(latexify(pow;kwargs...,fmt="%g",env=:raw))}"
+        expo = pow == 1//1 ? "" : "^{$(latexify(pow; kwargs..., fmt="%g", env=:raw))}"
     end
     return LaTeXString("$per$prefix$unitname$expo")
 end
 
-@latexrecipe function f(u::T; unitformat=:mathrm) where {T<:Units}
+@latexrecipe function f(u::T; unitformat=:mathrm, permode=:power) where {T<:Units}
     if unitformat === :mathrm
         env --> :inline
         return Expr(:latexifymerge, NakedUnits(u))
@@ -50,8 +50,26 @@ end
 struct NakedUnits
     u::Units
 end
-@latexrecipe function f(u::T; unitformat=:mathrm) where {T<:NakedUnits}
-    return Expr(:latexifymerge, intersperse(listunits(u.u), delimiters[unitformat])...)
+
+@latexrecipe function f(u::T; unitformat=:mathrm, permode=:power) where {T<:NakedUnits}
+    unitlist = listunits(u.u)
+    if unitformat in (:siunitx, :siunitxsimple) || permode === :power
+        return Expr(:latexifymerge, intersperse(unitlist, delimiters[unitformat])...)
+    end
+
+    numunits = [x for x in unitlist if power(x) >= 0]
+    denunits = [typeof(x)(tens(x), -power(x)) for x in unitlist if power(x) < 0]
+
+    numerator = intersperse(numunits, delimiters[unitformat])
+    denominator = intersperse(denunits, delimiters[unitformat])
+
+    if permode === :slash
+        return Expr(:latexifymerge, numerator..., "\\,/\\,", denominator...)
+    end
+    if permode === :frac
+        return Expr(:latexifymerge, "\\frac{", numerator..., "}{", denominator..., "}")
+    end
+    return error("permode $permode undefined.")
 end
 
 const delimiters = Dict{Symbol,String}(
