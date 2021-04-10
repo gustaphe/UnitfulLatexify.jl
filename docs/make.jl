@@ -14,4 +14,4 @@ makedocs(;
     pages=["index.md"],
 )
 
-deploydocs(; repo="github.com/gustaphe/UnitfulLatexify.jl.git")
+deploydocs(; devbranch="main", repo="github.com/gustaphe/UnitfulLatexify.jl.git")
