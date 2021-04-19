@@ -61,6 +61,12 @@ end
     denunits = [typeof(x)(tens(x), -power(x)) for x in unitlist if power(x) < 0]
 
     numerator = intersperse(numunits, delimiters[unitformat])
+    if iszero(length(denunits))
+        return Expr(:latexifymerge, numerator...)
+    end
+    if iszero(length(numunits))
+        numerator = [1]
+    end
     denominator = intersperse(denunits, delimiters[unitformat])
 
     if permode === :slash

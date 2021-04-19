@@ -25,6 +25,7 @@ julia> intersperse((1, 2, 3, 4), :a)
 ```
 """
 function intersperse(t::T, delim::U) where {T,U}
+    iszero(length(t)) && return ()
     L = length(t) * 2 - 1
     out = Vector{Union{typeof.(t)...,U}}(undef, L)
     out[1:2:L] .= t

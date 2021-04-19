@@ -93,6 +93,8 @@ end
     )
     @test latexify(p; unitformat=:siunitx, permode=:frac) ==
           latexify(p; unitformat=:siunitx)
+    @test latexify(u"m"; permode=:frac) == latexify(u"m")
+    @test latexify(u"m^-1"; permode=:frac) == LaTeXString(raw"$\frac{1}{\mathrm{m}}$")
     @test_throws ErrorException latexify(p; permode=:wrogn)
 end
 
