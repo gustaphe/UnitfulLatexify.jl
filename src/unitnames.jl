@@ -16,6 +16,8 @@ const unitnames = begin
         (:siunitxsimple, :Celsius) => "\\celsius",
         (:mathrm, :Fahrenheit) => "^\\circ F",
         (:siunitx, :Fahrenheit) => "\\fahrenheit",
-        (:siunitxsimple, :Fahrenheit) => "\\fahrenheits",
+        (:siunitxsimple, :Fahrenheit) => "\\fahrenheit",
+        (:siunitxsimple, :Angstrom) => "\\angstrom",
+        (:mathrm, :Angstrom) => "\\AA",
     )
 end
