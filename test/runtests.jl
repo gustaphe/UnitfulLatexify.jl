@@ -99,11 +99,11 @@ end
 end
 
 @testset "Labels" begin
-    @test latexslashunitlabel("x", u"m") == "\$x\\;/\\;\\mathrm{m}\$"
+    @test latexslashunitlabel("x", u"m") == "\$x\\;\\left/\\;\\mathrm{m}\\right.\$"
     @test latexroundunitlabel("x", u"m") == "\$x\\;\\left(\\mathrm{m}\\right)\$"
     @test latexsquareunitlabel("x", u"m") == "\$x\\;\\left[\\mathrm{m}\\right]\$"
     @test latexfracunitlabel("x", u"m") == "\$\\frac{x}{\\mathrm{m}}\$"
-    @test latexify("x", u"m") == "\$x\\;/\\;\\mathrm{m}\$"
+    @test latexify("x", u"m") == "\$x\\;\\left/\\;\\mathrm{m}\\right.\$"
 end
 
 format(UnitfulLatexify; overwrite=false) || @warn """
