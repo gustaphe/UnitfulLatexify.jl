@@ -29,7 +29,7 @@ end
         return Expr(:latexifymerge, NakedUnits(u))
     end
     env --> :raw
-    return Expr(:latexifymerge, "\\si{", NakedUnits(u), "}")
+    return Expr(:latexifymerge, "\\unit{", NakedUnits(u), "}")
 end
 
 @latexrecipe function f(q::T; unitformat=:mathrm) where {T<:AbstractQuantity}
@@ -44,7 +44,7 @@ end
         )
     end
     env --> :raw
-    return Expr(:latexifymerge, "\\SI{", q.val, "}{", NakedUnits(unit(q)), "}")
+    return Expr(:latexifymerge, "\\qty{", q.val, "}{", NakedUnits(unit(q)), "}")
 end
 
 struct NakedUnits

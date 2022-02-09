@@ -25,13 +25,13 @@ julia> latexify(q)
 L"$612.2\;\mathrm{nm}$"
 
 julia> latexify(q,unitformat=:siunitx)
-L"\SI{612.2}{\nano\meter}"
+L"\qty{612.2}{\nano\meter}"
 
 julia> latexify(u,unitformat=:mathrm) # explicit default
 L"$\mathrm{kg}\,\mathrm{m}\,\mathrm{s}^{-2}$"
 
 julia> latexify(u,unitformat=:siunitx)
-L"\si{\kilo\gram\meter\per\second\tothe{2}}"
+L"\unit{\kilo\gram\meter\per\second\tothe{2}}"
 ```
 
 ## Results

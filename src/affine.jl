@@ -12,7 +12,7 @@
         return LaTeXString(unitnames[(unitformat, unitname)])
     end
     env --> :raw
-    return Expr(:latexifymerge, "\\si{", unitnames[(unitformat, unitname)], "}")
+    return Expr(:latexifymerge, "\\unit{", unitnames[(unitformat, unitname)], "}")
 end
 
 @latexrecipe function f(q::T; unitformat=:mathrm) where {T<:AffineQuantity}
@@ -34,6 +34,6 @@ end
     end
     env --> :raw
     return Expr(
-        :latexifymerge, "\\SI{", q.val, "}{", unitnames[(unitformat, unitname)], "}"
+        :latexifymerge, "\\qty{", q.val, "}{", unitnames[(unitformat, unitname)], "}"
     )
 end

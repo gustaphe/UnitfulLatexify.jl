@@ -7,14 +7,14 @@ register(UnitfulLatexify)
 function *(
     a::AbstractQuantity, b::T
 ) where {
-    T<:AbstractQuantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}},
+    T<:AbstractQuantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
 }
     return a * b.val
 end
 function *(
     b::T, a::AbstractQuantity
 ) where {
-    T<:AbstractQuantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}},
+    T<:AbstractQuantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
 }
     return b.val * a
 end
@@ -44,7 +44,7 @@ end
 @latexrecipe function f(
     q::T; unitformat=:mathrm
 ) where {
-    T<:AbstractQuantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}},
+    T<:AbstractQuantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
 }
     if unitformat === :mathrm
         env --> :inline

@@ -15,14 +15,14 @@ end
     unitfullatexifytest(
         u"H*J/kg",
         raw"$\mathrm{H}\,\mathrm{J}\,\mathrm{kg}^{-1}$",
-        raw"\si{\henry\joule\per\kilo\gram}",
-        raw"\si{H.J.kg^{-1}}",
+        raw"\unit{\henry\joule\per\kilo\gram}",
+        raw"\unit{H.J.kg^{-1}}",
     )
     unitfullatexifytest(
         24.7e9u"Gm/s^2",
         raw"$2.47 \cdot 10^{10}\;\mathrm{Gm}\,\mathrm{s}^{-2}$",
-        raw"\SI{2.47e10}{\giga\meter\per\second\tothe{2}}",
-        raw"\SI{2.47e10}{Gm.s^{-2}}",
+        raw"\qty{2.47e10}{\giga\meter\per\second\tothe{2}}",
+        raw"\qty{2.47e10}{Gm.s^{-2}}",
     )
     unitfullatexifytest(
         6.02214076e23u"one",
@@ -30,12 +30,14 @@ end
         raw"\num{6.02214076e23}",
         raw"\num{6.02214076e23}",
     )
-    unitfullatexifytest(u"percent", raw"$\mathrm{\%}$", raw"\si{\percent}", raw"\si{\%}")
     unitfullatexifytest(
-        2u"°C", raw"$2\;\mathrm{^\circ C}$", raw"\SI{2}{\celsius}", raw"\SI{2}{\celsius}"
+        u"percent", raw"$\mathrm{\%}$", raw"\unit{\percent}", raw"\unit{\%}"
     )
     unitfullatexifytest(
-        1u"°", raw"$1\mathrm{^{\circ}}$", raw"\SI{1}{\degree}", raw"\SI{1}{\degree}"
+        2u"°C", raw"$2\;\mathrm{^\circ C}$", raw"\qty{2}{\celsius}", raw"\qty{2}{\celsius}"
+    )
+    unitfullatexifytest(
+        1u"°", raw"$1\mathrm{^{\circ}}$", raw"\qty{1}{\degree}", raw"\qty{1}{\degree}"
     )
     unitfullatexifytest(
         [1, 2, 3]u"m",
@@ -58,7 +60,7 @@ end
         \num{2} \\
         \num{3} \\
         \end{array}
-        \right]\;\si{\meter}
+        \right]\;\unit{\meter}
         \end{equation}
         """,
         raw"""
@@ -69,12 +71,12 @@ end
         \num{2} \\
         \num{3} \\
         \end{array}
-        \right]\;\si{m}
+        \right]\;\unit{m}
         \end{equation}
         """,
     )
     @test latexify(24.7e9u"Gm/s^2"; fmt="%.1e") ==
-          L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
+        L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
 end
 
 @testset "permode" begin
@@ -92,7 +94,7 @@ end
         raw"$5\;\frac{\mathrm{m}^{3}\,\mathrm{s}^{2}}{\mathrm{kg}^{4}\,\mathrm{H}}$"
     )
     @test latexify(p; unitformat=:siunitx, permode=:frac) ==
-          latexify(p; unitformat=:siunitx)
+        latexify(p; unitformat=:siunitx)
     @test latexify(u"m"; permode=:frac) == latexify(u"m")
     @test latexify(u"m^-1"; permode=:frac) == LaTeXString(raw"$\frac{1}{\mathrm{m}}$")
     @test_throws ErrorException latexify(p; permode=:wrogn)

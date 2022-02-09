@@ -22,7 +22,7 @@ or more usefully:
 latexify(:(x = a*t^2 = $x))
 ```
 
-This of course also works for Units objects by themselves:
+This of course also works for `Units` objects by themselves:
 
 ```@example main
 latexify(u"kg*m")
@@ -34,6 +34,7 @@ Some more usage examples:
 
 
 ## Arrays
+
 Because Latexify is recursive, an array of unitful quantities is shown as
 expected:
 
@@ -50,12 +51,13 @@ latexify([1, 2, 3]u"cm")
 
 
 ## siunitx.sty
+
 If you are exporting your numbers to an actual LaTeX document, you will of
 course want to use the commands from `siunitx.sty` rather than the `\mathrm`
 style used by default. To this end, UnitfulLatexify introduces a keyword
 argument `unitformat` which is `:mathrm` per default, but can be set to
-`:siunitx` for `\SI{8}{\second\meter\per\kilo\gram}` style and `:siunitxsimple` for
-`\SI{8}{s.m/kg}`. Like other Latexify keywords, this can be set to be a default
+`:siunitx` for `\qty{8}{\second\meter\per\kilo\gram}` style and `:siunitxsimple` for
+`\qty{8}{s.m/kg}`. Like other Latexify keywords, this can be set to be a default
 by using `set_default(unitformat=:siunitx)`, or given with each latexification
 command:
 
@@ -65,6 +67,7 @@ print(ans) # hide
 ```
 
 ### One
+
 `siunitx` can also render unitless numbers nicely by putting them in `\num` commands. As the Unitful `NoUnits` is so fragile, `UnitfulLatexify` exports a unit `u"one"` which stays with a quantity until it's combined with another unit. You'll have to invoke this manually:
 
 ```@example main
@@ -73,6 +76,7 @@ print(ans) # hide
 ```
 
 ### Ranges and lists
+
 Another thing that `siunitx` does uniquely is lists and ranges of quantities.
 If you want the default behaviour of tuples and ranges to be printed as arrays,
 use `collect(x)` or `[x...]` to explicitly turn them into arrays first.
@@ -89,6 +93,7 @@ latexify((1:5)u"one"; unitformat=:siunitx),
 
 
 ## Plots labels
+
 UnitfulLatexify also interfaces with
 [UnitfulRecipes.jl](https://github.com/jw3126/UnitfulRecipes.jl) by way of
 implementing a two-argument `(label, unit)` recipe:
@@ -130,6 +135,7 @@ plot(
 ```
 
 ## Per-modes
+
 In mathrm-mode, one might prefer ``\mathrm{J}\,/\,\mathrm{kg}`` or
 ``\frac{\mathrm{J}}{\mathrm{kg}}`` over ``\mathrm{J}\,\mathrm{kg}^{-1}``. This can be achieved by
 supplying `permode=:slash` or `permode=:frac` respectively.
@@ -137,8 +143,15 @@ supplying `permode=:slash` or `permode=:frac` respectively.
 These will have no effect in `siunitx` mode, because the latex package handles
 this for you, and you can set it in your document.
 
+## New siunitx syntax
+
+Starting from `v1.6`, the new syntax from `siunitx v3` (`\qty, \unit` rather
+than `\SI, \si`) is used. Upgrade `siunitx` or downgrade `UnitfulLatexify` if
+this does not compile for you.
+
 ## A more complete list of defined units
-Below is a poorly scraped list of units defined in `siunitx` and what comes out
+
+Below is a poorly scraped list of units defined in `Unitful` and what comes out
 if you run it through `latexify`. Feel free to create an issue if there's a
 unit missing or being incorrectly rendered (and suggest a better ``\LaTeX``
 representation if you know one).

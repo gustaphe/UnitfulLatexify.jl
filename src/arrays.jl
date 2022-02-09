@@ -16,9 +16,7 @@ end
     a::T;
     unitformat=:mathrm,
 ) where {
-    T<:AbstractArray{
-        <:AbstractQuantity{N,D,U}
-    },
+    T<:AbstractArray{<:AbstractQuantity{N,D,U}}
 } where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
     env --> :equation
     if unitformat in (:siunitx, :siunitxsimple)
@@ -35,7 +33,7 @@ end
         env --> :raw
         return Expr(
             :latexifymerge,
-            "\\SIrange{",
+            "\\qtyrange{",
             r.start.val,
             "}{",
             r.stop.val,
@@ -52,9 +50,7 @@ end
     r::T;
     unitformat=:mathrm,
 ) where {
-    T<:AbstractRange{
-        <:AbstractQuantity{N,D,U}
-    },
+    T<:AbstractRange{<:AbstractQuantity{N,D,U}}
 } where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
     if unitformat in (:siunitx, :siunitxsimple)
         env --> :raw
@@ -72,7 +68,7 @@ end
         env --> :raw
         return Expr(
             :latexifymerge,
-            "\\SIlist{",
+            "\\qtylist{",
             intersperse(ustrip.(l), ";")...,
             "}{",
             NakedUnits(unit(first(l))),
@@ -87,9 +83,7 @@ end
     l::Tuple{T,Vararg{T}};
     unitformat=:mathrm,
 ) where {
-    T<:AbstractQuantity{
-        N,D,U
-    },
+    T<:AbstractQuantity{N,D,U}
 } where {N<:Number,D,U<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
     if unitformat in (:siunitx, :siunitxsimple)
         env --> :raw

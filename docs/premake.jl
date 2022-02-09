@@ -16,7 +16,7 @@ commands = [
     :(latexify(2.4e6u"one"; unitformat=:siunitx)),
     :(latexify(612.2u"nm"; unitformat=:siunitxsimple)),
     :(latexify(u"kg*m/s^2"; unitformat=:siunitxsimple)),
-    :(latexify(u"percent"; unitformat=:mathrm)),
+    #:(latexify(u"percent"; unitformat=:mathrm)), # Messes with comments
     :(latexify((1:5)u"m"; unitformat=:siunitx)),
     :(latexify((1, 2, 4) .* u"m"; unitformat=:siunitx)),
     :(latexify((1, 2, 4) .* u"one"; unitformat=:siunitx)),
@@ -91,7 +91,7 @@ allunits = begin
         "Gy",
         "Sv",
         "kat",
-        "percent",
+        #"percent", # Messes with comments
         "permille", # Undefined in all formats
         "pertenthousand", # Undefined in all formats (butchered)
         "°C",
