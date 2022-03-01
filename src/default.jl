@@ -23,16 +23,21 @@
     return LaTeXString("$per$prefix$unitname$expo")
 end
 
-@latexrecipe function f(u::T; unitformat=:mathrm, permode=:power) where {T<:Units}
+@latexrecipe function f(
+    u::T; unitformat=:mathrm, permode=:power, siunitxlegacy=false
+) where {T<:Units}
     if unitformat === :mathrm
         env --> :inline
         return Expr(:latexifymerge, NakedUnits(u))
     end
     env --> :raw
+    siunitxlegacy && return Expr(:latexifymerge, "\\si{", NakedUnits(u), "}")
     return Expr(:latexifymerge, "\\unit{", NakedUnits(u), "}")
 end
 
-@latexrecipe function f(q::T; unitformat=:mathrm) where {T<:AbstractQuantity}
+@latexrecipe function f(
+    q::T; unitformat=:mathrm, siunitxlegacy=false
+) where {T<:AbstractQuantity}
     if unitformat === :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()
@@ -44,6 +49,8 @@ end
         )
     end
     env --> :raw
+    siunitxlegacy &&
+        return Expr(:latexifymerge, "\\SI{", q.val, "}{", NakedUnits(unit(q)), "}")
     return Expr(:latexifymerge, "\\qty{", q.val, "}{", NakedUnits(unit(q)), "}")
 end
 

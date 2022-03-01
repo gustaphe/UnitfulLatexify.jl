@@ -137,8 +137,8 @@ plot(
 ## Per-modes
 
 In mathrm-mode, one might prefer ``\mathrm{J}\,/\,\mathrm{kg}`` or
-``\frac{\mathrm{J}}{\mathrm{kg}}`` over ``\mathrm{J}\,\mathrm{kg}^{-1}``. This can be achieved by
-supplying `permode=:slash` or `permode=:frac` respectively.
+``\frac{\mathrm{J}}{\mathrm{kg}}`` over ``\mathrm{J}\,\mathrm{kg}^{-1}``. This
+can be achieved by supplying `permode=:slash` or `permode=:frac` respectively.
 
 These will have no effect in `siunitx` mode, because the latex package handles
 this for you, and you can set it in your document.
@@ -146,8 +146,8 @@ this for you, and you can set it in your document.
 ## New siunitx syntax
 
 Starting from `v1.6`, the new syntax from `siunitx v3` (`\qty, \unit` rather
-than `\SI, \si`) is used. Upgrade `siunitx` or downgrade `UnitfulLatexify` if
-this does not compile for you.
+than `\SI, \si`) is used. If you cannot upgrade `siunitx`, there's the option
+to use `siunitxlegacy=true`.
 
 ## A more complete list of defined units
 

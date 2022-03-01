@@ -77,6 +77,9 @@ end
     )
     @test latexify(24.7e9u"Gm/s^2"; fmt="%.1e") ==
         L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
+
+    @test latexify(5.9722e24u"kg"; unitformat=:siunitx, siunitxlegacy=true) == raw"\SI{5.9722e24}{\kilo\gram}"
+    @test latexify(u"eV"; unitformat=:siunitx, siunitxlegacy=true) == raw"\si{\electronvolt}"
 end
 
 @testset "permode" begin
