@@ -19,5 +19,21 @@ const unitnames = begin
         (:siunitxsimple, :Fahrenheit) => "\\fahrenheit",
         (:siunitxsimple, :Angstrom) => "\\angstrom",
         (:mathrm, :Angstrom) => "\\AA",
+        (:mathrm, :DoubleTurn) => "\\S",
+        (:mathrm, :Turn) => "\\tau",
+        (:mathrm, :HalfTurn) => "\\pi",
+        (:mathrm, :Quadrant) => "\\frac{\\pi}{2}",
+        (:mathrm, :Sextant) => "\\frac{\\pi}{3}",
+        (:mathrm, :Octant) => "\\frac{\\pi}{4}",
+        (:mathrm, :ClockPosition) => "\\frac{\\pi}{12}",
+        (:mathrm, :HourAngle) => "\\frac{\\pi}{24}",
+        (:mathrm, :CompassPoint) => "\\frac{\\pi}{32}",
+        (:mathrm, :Hexacontade) => "\\frac{\\pi}{60}",
+        (:mathrm, :BinaryRadian) => "\\frac{\\pi}{256}",
+        (:mathrm, :DiameterPart) => "\\oslash", # This is slightly wrong
+        (:mathrm, :Gradian) => "^g",
+        (:mathrm, :Arcminute) => "'",
+        (:mathrm, :Arcsecond) => "''",
+        (:mathrm, :ArcsecondShort) => "''",
     )
 end
