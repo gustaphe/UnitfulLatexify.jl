@@ -6,9 +6,12 @@ using Test
 using JuliaFormatter
 
 function unitfullatexifytest(val, mathrmexpected, siunitxexpected, siunitxsimpleexpected)
-    @test latexify(val; unitformat=:mathrm) == LaTeXString(mathrmexpected)
-    @test latexify(val; unitformat=:siunitx) == LaTeXString(siunitxexpected)
-    @test latexify(val; unitformat=:siunitxsimple) == LaTeXString(siunitxsimpleexpected)
+    @test latexify(val; unitformat=:mathrm) ==
+        LaTeXString(replace(mathrmexpected, "\r\n" => "\n"))
+    @test latexify(val; unitformat=:siunitx) ==
+        LaTeXString(replace(siunitxexpected, "\r\n" => "\n"))
+    @test latexify(val; unitformat=:siunitxsimple) ==
+        LaTeXString(replace(siunitxsimpleexpected, "\r\n" => "\n"))
 end
 
 @testset "Latexify units" begin
@@ -78,8 +81,10 @@ end
     @test latexify(24.7e9u"Gm/s^2"; fmt="%.1e") ==
         L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
 
-    @test latexify(5.9722e24u"kg"; unitformat=:siunitx, siunitxlegacy=true) == raw"\SI{5.9722e24}{\kilo\gram}"
-    @test latexify(u"eV"; unitformat=:siunitx, siunitxlegacy=true) == raw"\si{\electronvolt}"
+    @test latexify(5.9722e24u"kg"; unitformat=:siunitx, siunitxlegacy=true) ==
+        raw"\SI{5.9722e24}{\kilo\gram}"
+    @test latexify(u"eV"; unitformat=:siunitx, siunitxlegacy=true) ==
+        raw"\si{\electronvolt}"
 end
 
 @testset "permode" begin
