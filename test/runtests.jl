@@ -6,9 +6,9 @@ using Test
 using JuliaFormatter
 
 function unitfullatexifytest(val, mathrmexpected, siunitxexpected, siunitxsimpleexpected)
-    @test latexify(val; unitformat=:mathrm) == LaTeXString(mathrmexpected)
-    @test latexify(val; unitformat=:siunitx) == LaTeXString(siunitxexpected)
-    @test latexify(val; unitformat=:siunitxsimple) == LaTeXString(siunitxsimpleexpected)
+    @test latexify(val; unitformat=:mathrm) == LaTeXString(replace(mathrmexpected, "\r\n" => "\n"))
+    @test latexify(val; unitformat=:siunitx) == LaTeXString(replace(siunitxexpected, "\r\n"=>"\n"))
+    @test latexify(val; unitformat=:siunitxsimple) == LaTeXString(replace(siunitxsimpleexpected, "\r\n"=>"\n"))
 end
 
 @testset "Latexify units" begin
