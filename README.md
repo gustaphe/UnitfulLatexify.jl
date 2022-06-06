@@ -20,7 +20,7 @@ L"$612.2\;\mathrm{nm}$"
 ```
 
 $$
-612.2\;\mathrm{nm}
+612.2 \mathrm{nm}
 $$
 
 ```julia
@@ -29,7 +29,7 @@ L"$\mathrm{kg}\,\mathrm{m}\,\mathrm{s}^{-2}$"
 ```
 
 $$
-\mathrm{kg}\,\mathrm{m}\,\mathrm{s}^{-2}
+\mathrm{kg} \mathrm{m} \mathrm{s}^{-2}
 $$
 
 ```julia
@@ -50,7 +50,7 @@ The period is $(@latexrun T = $(2.5u"ms")), so the frequency is $(@latexdefine f
 ```
 , which renders as
 
-> The period is $T = 2.5\;\mathrm{ms}$, so the frequency is $f = \frac{1}{T} = 0.4\;\mathrm{kHz}$.
+> The period is $T = 2.5 \mathrm{ms}$, so the frequency is $f = \frac{1}{T} = 0.4 \mathrm{kHz}$.
 
 Note that the quantity has to be interpolated (put inside a
 dollar-parenthesis), or Latexify will interpret it as a multiplication between
