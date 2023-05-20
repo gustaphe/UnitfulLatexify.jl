@@ -9,6 +9,7 @@ const unitnames = begin
         (:mathrm, :Percent) => "\\%",
         (:siunitxsimple, :Percent) => "\\%",
         (:mathrm, :Degree) => "^{\\circ}",
+        (:siunitxsimple, :Degree) => "\\degree",
         (:siunitx, :eV) => "\\electronvolt",
         (:mathrm, :Ohm) => "\\Omega",
         (:mathrm, :Celsius) => "^\\circ C",
