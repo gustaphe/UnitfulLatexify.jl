@@ -38,6 +38,7 @@ end
 @latexrecipe function f(
     q::T; unitformat=:mathrm, siunitxlegacy=false
 ) where {T<:AbstractQuantity}
+    operation := :*
     if unitformat === :mathrm
         env --> :inline
         fmt --> FancyNumberFormatter()

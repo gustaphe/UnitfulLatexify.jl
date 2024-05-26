@@ -116,6 +116,13 @@ end
     @test latexify("x", u"m") == "\$x\\;\\left/\\;\\mathrm{m}\\right.\$"
 end
 
+@testset "Parentheses" begin
+    if isdefined(Latexify, :_getoperation)
+        @test @latexify($(3u"mm")^2 - 4 * $(2u"mm^2")) ==
+            raw"$\left( 3\;\mathrm{mm} \right)^2 - 4 \cdot 2\;\mathrm{mm}$"
+    end
+end
+
 format(UnitfulLatexify; overwrite=false) || @warn """
 Code is not formatted correctly. Please run
 ```
