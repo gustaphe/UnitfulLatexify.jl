@@ -94,9 +94,7 @@ latexify((1:5)u"one"; unitformat=:siunitx),
 
 ## Plots labels
 
-UnitfulLatexify also interfaces with
-[UnitfulRecipes.jl](https://github.com/jw3126/UnitfulRecipes.jl) by way of
-implementing a two-argument `(label, unit)` recipe:
+UnitfulLatexify also interfaces with `Plots` by way of implementing a two-argument `(label, unit)` recipe:
 
 ```@example main
 latexify("v", u"km/s")
@@ -105,7 +103,7 @@ latexify("v", u"km/s")
 This enables this dreamlike example:
 
 ```@example plot
-using Unitful, Plots, Latexify, UnitfulRecipes, UnitfulLatexify
+using Unitful, Plots, Latexify, UnitfulLatexify
 gr()
 default(fontfamily="Computer Modern")
 

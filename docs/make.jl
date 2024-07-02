@@ -12,6 +12,7 @@ makedocs(;
     modules=[UnitfulLatexify],
     doctest=false,
     pages=["index.md"],
+    checkdocs=:exports,
 )
 
 deploydocs(; devbranch="main", repo="github.com/gustaphe/UnitfulLatexify.jl.git")
