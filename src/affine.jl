@@ -1,4 +1,6 @@
-@latexrecipe function f(u::T; unitformat=:mathrm) where {T<:AffineUnits}
+@latexrecipe function f(u::AffineUnits)
+    insert_deprecated_unitformat!(kwargs)
+    fmt = get_formatter(kwargs)
     if u == Unitful.°C
         unitname = :Celsius
     elseif u == Unitful.°F
@@ -7,15 +9,17 @@
         # If it's not celsius or farenheit, let it do the default thing
         return genericunit(u)
     end
-    if unitformat === :mathrm
-        env --> :inline
-        return LaTeXString(unitnames[(unitformat, unitname)])
+    if fmt isa SiunitxNumberFormatter
+        env --> :raw
+        return Expr(:latexifymerge, "\\unit{", unitnames[(:siunitx, unitname)], "}")
     end
-    env --> :raw
-    return Expr(:latexifymerge, "\\unit{", unitnames[(unitformat, unitname)], "}")
+    env --> :inline
+    return LaTeXString(unitnames[(:mathrm, unitname)])
 end
 
-@latexrecipe function f(q::T; unitformat=:mathrm) where {T<:AffineQuantity}
+@latexrecipe function f(q::AffineQuantity)
+    insert_deprecated_unitformat!(kwargs)
+    fmt = get_formatter(kwargs)
     u = unit(q)
     if u == Unitful.°C
         unitname = :Celsius
@@ -23,17 +27,16 @@ end
         unitname = :Fahrenheit
     else
         # If it's not celsius or farenheit, let it do the default thing
-        return genericunit(u)
+        return ustrip(q)*genericunit(u)
     end
-    if unitformat === :mathrm
-        env --> :inline
-        fmt --> FancyNumberFormatter()
+    if fmt isa SiunitxNumberFormatter
+        env --> :raw
         return Expr(
-            :latexifymerge, q.val, "\\;\\mathrm{", unitnames[(unitformat, unitname)], "}"
-        )
+                    :latexifymerge, "\\qty{", NakedNumber(q.val), "}{", unitnames[(:siunitx, unitname)], "}"
+                   )
     end
-    env --> :raw
+    env --> :inline
     return Expr(
-        :latexifymerge, "\\qty{", q.val, "}{", unitnames[(unitformat, unitname)], "}"
-    )
+                :latexifymerge, q.val, "\\;\\mathrm{", unitnames[(:mathrm, unitname)], "}"
+               )
 end

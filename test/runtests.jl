@@ -1,17 +1,21 @@
 using UnitfulLatexify
 using Unitful
 using Latexify
+using Latexify: FancyNumberFormatter, SiunitxNumberFormatter
 using LaTeXStrings
 using Test
 using JuliaFormatter
 
-function unitfullatexifytest(val, mathrmexpected, siunitxexpected, siunitxsimpleexpected)
-    @test latexify(val; unitformat=:mathrm) ==
+function unitfullatexifytest(
+        val,
+        mathrmexpected,
+        siunitxexpected,
+        #siunitxsimpleexpected,
+    )
+    @test latexify(val; fmt=Latexify.FancyNumberFormatter()) ==
         LaTeXString(replace(mathrmexpected, "\r\n" => "\n"))
-    @test latexify(val; unitformat=:siunitx) ==
+    @test latexify(val; fmt=Latexify.SiunitxNumberFormatter()) ==
         LaTeXString(replace(siunitxexpected, "\r\n" => "\n"))
-    @test latexify(val; unitformat=:siunitxsimple) ==
-        LaTeXString(replace(siunitxsimpleexpected, "\r\n" => "\n"))
 end
 
 @testset "Latexify units" begin
@@ -19,28 +23,31 @@ end
         u"H*J/kg",
         raw"$\mathrm{H}\,\mathrm{J}\,\mathrm{kg}^{-1}$",
         raw"\unit{\henry\joule\per\kilo\gram}",
-        raw"\unit{H.J.kg^{-1}}",
+        #raw"\unit{H.J.kg^{-1}}",
     )
     unitfullatexifytest(
         24.7e9u"Gm/s^2",
         raw"$2.47 \cdot 10^{10}\;\mathrm{Gm}\,\mathrm{s}^{-2}$",
         raw"\qty{2.47e10}{\giga\meter\per\second\tothe{2}}",
-        raw"\qty{2.47e10}{Gm.s^{-2}}",
+        #raw"\qty{2.47e10}{Gm.s^{-2}}",
     )
     unitfullatexifytest(
-        6.02214076e23u"one",
-        raw"$6.022 \cdot 10^{23}$",
-        raw"\num{6.02214076e23}",
-        raw"\num{6.02214076e23}",
+        u"percent",
+        raw"$\mathrm{\%}$",
+        raw"\unit{\percent}",
+        #raw"\unit{\%}"
     )
     unitfullatexifytest(
-        u"percent", raw"$\mathrm{\%}$", raw"\unit{\percent}", raw"\unit{\%}"
+        2u"°C",
+        raw"$2\;\mathrm{^\circ C}$",
+        raw"\qty{2}{\celsius}",
+        #raw"\qty{2}{\celsius}"
     )
     unitfullatexifytest(
-        2u"°C", raw"$2\;\mathrm{^\circ C}$", raw"\qty{2}{\celsius}", raw"\qty{2}{\celsius}"
-    )
-    unitfullatexifytest(
-        1u"°", raw"$1\mathrm{^{\circ}}$", raw"\qty{1}{\degree}", raw"\qty{1}{\degree}"
+        1u"°",
+        raw"$1\mathrm{^{\circ}}$",
+        raw"\qty{1}{\degree}",
+        #raw"\qty{1}{\degree}"
     )
     unitfullatexifytest(
         [1, 2, 3]u"m",
@@ -66,7 +73,7 @@ end
         \right]\;\unit{\meter}
         \end{equation}
         """,
-        raw"""
+        #=raw"""
         \begin{equation}
         \left[
         \begin{array}{c}
@@ -76,14 +83,14 @@ end
         \end{array}
         \right]\;\unit{m}
         \end{equation}
-        """,
+        """,=#
     )
     @test latexify(24.7e9u"Gm/s^2"; fmt="%.1e") ==
         L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
 
-    @test latexify(5.9722e24u"kg"; unitformat=:siunitx, siunitxlegacy=true) ==
+    @test latexify(5.9722e24u"kg"; fmt=SiunitxNumberFormatter(version=2)) ==
         raw"\SI{5.9722e24}{\kilo\gram}"
-    @test latexify(u"eV"; unitformat=:siunitx, siunitxlegacy=true) ==
+    @test latexify(u"eV"; fmt=SiunitxNumberFormatter(version=2)) ==
         raw"\si{\electronvolt}"
 end
 
@@ -101,8 +108,8 @@ end
     @test latexify(p; permode=:frac) == LaTeXString(
         raw"$5\;\frac{\mathrm{m}^{3}\,\mathrm{s}^{2}}{\mathrm{kg}^{4}\,\mathrm{H}}$"
     )
-    @test latexify(p; unitformat=:siunitx, permode=:frac) ==
-        latexify(p; unitformat=:siunitx)
+    @test latexify(p; permode=:frac, fmt=SiunitxNumberFormatter()) ==
+    latexify(p; fmt=SiunitxNumberFormatter())
     @test latexify(u"m"; permode=:frac) == latexify(u"m")
     @test latexify(u"m^-1"; permode=:frac) == LaTeXString(raw"$\frac{1}{\mathrm{m}}$")
     @test_throws ErrorException latexify(p; permode=:wrogn)
@@ -119,7 +126,7 @@ end
 @testset "Parentheses" begin
     if isdefined(Latexify, :_getoperation)
         @test @latexify($(3u"mm")^2 - 4 * $(2u"mm^2")) ==
-            raw"$\left( 3\;\mathrm{mm} \right)^2 - 4 \cdot 2\;\mathrm{mm}$"
+        raw"$\left( 3\;\mathrm{mm} \right)^{2} - 4 \cdot 2\;\mathrm{mm}^{2}$"
     end
 end
 

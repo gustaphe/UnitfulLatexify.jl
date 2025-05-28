@@ -1,81 +1,56 @@
-@latexrecipe function f(p::T; unitformat=:mathrm) where {T<:Unit}
-    prefix = prefixes[(unitformat, tens(p))]
-    pow = power(p)
-    unitname = getunitname(p, unitformat)
-    if unitformat === :mathrm
-        env --> :inline
-        if pow == 1//1
-            expo = ""
-        else
-            expo = "^{$(latexify(pow; kwargs..., fmt="%g", env=:raw))}"
-        end
-        return LaTeXString("\\mathrm{$prefix$unitname}$expo")
-    end
-    env --> :raw
-    if unitformat === :siunitx
-        per = pow < 0 ? "\\per" : ""
-        pow = abs(pow)
-        expo = pow == 1//1 ? "" : "\\tothe{$(latexify(pow; kwargs..., fmt="%g", env=:raw))}"
-    else
-        per = ""
-        expo = pow == 1//1 ? "" : "^{$(latexify(pow; kwargs..., fmt="%g", env=:raw))}"
-    end
-    return LaTeXString("$per$prefix$unitname$expo")
+@latexrecipe function f(p::Unit)
+    insert_deprecated_unitformat!(kwargs)
+
+    fmt = get_formatter(kwargs)
+    env --> get_format_env(fmt)
+    return fmt(p)
 end
 
-@latexrecipe function f(
-    u::T; unitformat=:mathrm, permode=:power, siunitxlegacy=false
-) where {T<:Units}
-    if unitformat === :mathrm
-        env --> :inline
-        return Expr(:latexifymerge, NakedUnits(u))
-    end
-    env --> :raw
-    siunitxlegacy && return Expr(:latexifymerge, "\\si{", NakedUnits(u), "}")
-    return Expr(:latexifymerge, "\\unit{", NakedUnits(u), "}")
+@latexrecipe function f(u::Units; permode=:power)
+    insert_deprecated_unitformat!(kwargs)
+    fmt = get_formatter(kwargs)
+    env --> get_format_env(fmt)
+    return fmt(u)
 end
 
-@latexrecipe function f(
-    q::T; unitformat=:mathrm, siunitxlegacy=false
-) where {T<:AbstractQuantity}
+@latexrecipe function f(q::AbstractQuantity)
+    insert_deprecated_unitformat!(kwargs)
+    fmt = get_formatter(kwargs)
+    env --> get_format_env(fmt)
     operation := :*
-    if unitformat === :mathrm
-        env --> :inline
-        fmt --> FancyNumberFormatter()
-        return Expr(
-            :latexifymerge,
-            q.val,
-            has_unit_spacing(unit(q)) ? "\\;" : nothing,
-            NakedUnits(unit(q)),
-        )
-    end
-    env --> :raw
-    siunitxlegacy &&
-        return Expr(:latexifymerge, "\\SI{", q.val, "}{", NakedUnits(unit(q)), "}")
-    return Expr(:latexifymerge, "\\qty{", q.val, "}{", NakedUnits(unit(q)), "}")
+
+    return fmt(q)
 end
 
 struct NakedUnits
     u::Units
 end
+struct NakedNumber
+    n::Number
+end
 
-@latexrecipe function f(u::T; unitformat=:mathrm, permode=:power) where {T<:NakedUnits}
+@latexrecipe function f(u::NakedUnits; permode=:power)
+    insert_deprecated_unitformat!(kwargs)
+    fmt = get_formatter(kwargs)
     unitlist = listunits(u.u)
-    if unitformat in (:siunitx, :siunitxsimple) || permode === :power
-        return Expr(:latexifymerge, intersperse(unitlist, delimiters[unitformat])...)
+    if fmt isa SiunitxNumberFormatter
+        return Expr(:latexifymerge, unitlist...)
+    end
+    if permode === :power
+        return Expr(:latexifymerge, intersperse(unitlist, "\\,")...)
     end
 
     numunits = [x for x in unitlist if power(x) >= 0]
     denunits = [typeof(x)(tens(x), -power(x)) for x in unitlist if power(x) < 0]
 
-    numerator = intersperse(numunits, delimiters[unitformat])
-    if iszero(length(denunits))
+    numerator = intersperse(numunits, "\\,")
+    if isempty(denunits)
         return Expr(:latexifymerge, numerator...)
     end
-    if iszero(length(numunits))
+    if isempty(numunits)
         numerator = [1]
     end
-    denominator = intersperse(denunits, delimiters[unitformat])
+    denominator = intersperse(denunits, "\\,")
 
     if permode === :slash
         return Expr(:latexifymerge, numerator..., "\\,/\\,", denominator...)
@@ -86,6 +61,80 @@ end
     return error("permode $permode undefined.")
 end
 
-const delimiters = Dict{Symbol,String}(
-    :mathrm => "\\,", :siunitx => "", :siunitxsimple => "."
-)
+@latexrecipe function f(n::NakedNumber)
+    fmt = get_formatter(kwargs)
+    if fmt isa SiunitxNumberFormatter
+        fmt := PlainNumberFormatter()
+    end
+    return n.n
+end
+
+function(fmt::SiunitxNumberFormatter)(u::Unit)
+    prefix = prefixes[(:siunitx, tens(u))]
+    pow = power(u)
+    unitname = getunitname(u, :siunitx)
+    per = pow < 0 ? "\\per" : ""
+    pow = abs(pow)
+    expo = pow == 1//1 ? "" : "\\tothe{$(latexify(pow; fmt="%g", env=:raw))}"
+    return LaTeXString("$per$prefix$unitname$expo")
+end
+function (fmt::AbstractNumberFormatter)(u::Unit)
+    prefix = prefixes[(:mathrm, tens(u))]
+    unitname = getunitname(u, :mathrm)
+    pow = power(u)
+    expo = pow == 1//1 ? "" : "^{$(latexify(pow; fmt="%g", env=:raw))}"
+    return LaTeXString("\\mathrm{$prefix$unitname}$expo")
+end
+
+get_format_env(fmt::SiunitxNumberFormatter) = :raw
+get_format_env(fmt) = :inline
+
+function (fmt::SiunitxNumberFormatter)(u::Units)
+    opening = fmt.version < 3 ? "\\si{" : "\\unit{"
+    return Expr(:latexifymerge, opening, NakedUnits(u), "}")
+end
+(::AbstractNumberFormatter)(u::Units) = Expr(:latexifymerge, NakedUnits(u))
+
+function (fmt::SiunitxNumberFormatter)(q::AbstractQuantity)
+    opening = fmt.version < 3 ? "\\SI{" : "\\qty{"
+    return Expr(:latexifymerge, opening, NakedNumber(q.val), "}{", NakedUnits(unit(q)), "}")
+end
+function (::AbstractNumberFormatter)(q::AbstractQuantity)
+    Expr(
+         :latexifymerge,
+         NakedNumber(q.val),
+         has_unit_spacing(unit(q)) ? "\\;" : nothing,
+         NakedUnits(unit(q)),
+        )
+end
+(::SiunitxNumberFormatter)(n::NakedNumber) = PlainNumberFormatter(n.n)
+
+
+function insert_deprecated_unitformat!(kwargs)
+    unitformat = pop!(kwargs, :unitformat, nothing)
+    siunitxlegacy = pop!(kwargs, :siunitxlegacy, nothing)
+    if ~isnothing(unitformat)
+        Base.depwarn("`unitformat` kwarg is deprecated, use e.g. `fmt=SiunitxNumberFormatter()` instead", :latexify)
+        if unitformat === :mathrm
+            kwargs[:fmt] = FancyNumberFormatter()
+        end
+        if unitformat === :siunitx
+            kwargs[:fmt] = SiunitxNumberFormatter()
+        end
+    end
+    if ~isnothing(siunitxlegacy)
+        Base.depwarn("`siunitxlegacy` kwarg is deprecated, use SiunitxNumberFormatter(version=1)` instead", :latexify)
+        fmt = get_formatter(kwargs)
+        if fmt isa SiunitxNumberFormatter
+            kwargs[:fmt] = SiunitxNumberFormatter(fmt.format_options, siunitxlegacy ? 1 : 3)
+        end
+    end
+end
+
+function get_formatter(kwargs)
+    fmt = get(kwargs, :fmt, FancyNumberFormatter())
+    if fmt isa String
+        fmt = StyledNumberFormatter(fmt)
+    end
+    return fmt
+end

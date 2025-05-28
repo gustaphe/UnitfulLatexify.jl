@@ -21,10 +21,22 @@ using Unitful:
     genericunit,
     has_unit_spacing
 using Latexify:
-    Latexify, @latexrecipe, latexify, _latexarray, FancyNumberFormatter, latexraw
-using LaTeXStrings: LaTeXString
+    Latexify,
+    @latexrecipe,
+    latexify,
+    _latexarray,
+    latexraw,
+    FancyNumberFormatter,
+    PlainNumberFormatter,
+    StyledNumberFormatter,
+    SiunitxNumberFormatter,
+    AbstractNumberFormatter
+using LaTeXStrings:
+    LaTeXString
 
-import Latexify.latexify
+import Latexify:
+    latexify
+
 import Base.(:*)
 
 export latexslashunitlabel, latexroundunitlabel, latexsquareunitlabel, latexfracunitlabel
@@ -38,7 +50,6 @@ include("unitnames.jl")
 
 include("auxiliary.jl")
 include("default.jl")
-include("one.jl")
 include("arrays.jl")
 include("affine.jl")
 include("label.jl")
