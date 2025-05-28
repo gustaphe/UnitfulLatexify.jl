@@ -56,8 +56,8 @@ end
 # Could be automated by temporarily redefining @unit, @affineunit ... and include()ing this file.
 functions = [
     x -> "\\verb+$(string(x))+",
-    x -> latexify.(x, unitformat=:mathrm),
-    x -> latexify.(x, unitformat=:siunitx),
+    x -> latexify.(x; unitformat=:mathrm),
+    x -> latexify.(x; unitformat=:siunitx),
     x -> latexify(x; unitformat=:siunitxsimple),
 ]
 allunits = begin

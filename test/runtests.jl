@@ -7,11 +7,11 @@ using Test
 using JuliaFormatter
 
 function unitfullatexifytest(
-        val,
-        mathrmexpected,
-        siunitxexpected,
-        #siunitxsimpleexpected,
-    )
+    val,
+    mathrmexpected,
+    siunitxexpected,
+    #siunitxsimpleexpected,
+)
     @test latexify(val; fmt=Latexify.FancyNumberFormatter()) ==
         LaTeXString(replace(mathrmexpected, "\r\n" => "\n"))
     @test latexify(val; fmt=Latexify.SiunitxNumberFormatter()) ==
@@ -90,8 +90,7 @@ end
 
     @test latexify(5.9722e24u"kg"; fmt=SiunitxNumberFormatter(version=2)) ==
         raw"\SI{5.9722e24}{\kilo\gram}"
-    @test latexify(u"eV"; fmt=SiunitxNumberFormatter(version=2)) ==
-        raw"\si{\electronvolt}"
+    @test latexify(u"eV"; fmt=SiunitxNumberFormatter(version=2)) == raw"\si{\electronvolt}"
 end
 
 @testset "permode" begin
@@ -109,7 +108,7 @@ end
         raw"$5\;\frac{\mathrm{m}^{3}\,\mathrm{s}^{2}}{\mathrm{kg}^{4}\,\mathrm{H}}$"
     )
     @test latexify(p; permode=:frac, fmt=SiunitxNumberFormatter()) ==
-    latexify(p; fmt=SiunitxNumberFormatter())
+        latexify(p; fmt=SiunitxNumberFormatter())
     @test latexify(u"m"; permode=:frac) == latexify(u"m")
     @test latexify(u"m^-1"; permode=:frac) == LaTeXString(raw"$\frac{1}{\mathrm{m}}$")
     @test_throws ErrorException latexify(p; permode=:wrogn)
@@ -126,7 +125,7 @@ end
 @testset "Parentheses" begin
     if isdefined(Latexify, :_getoperation)
         @test @latexify($(3u"mm")^2 - 4 * $(2u"mm^2")) ==
-        raw"$\left( 3\;\mathrm{mm} \right)^{2} - 4 \cdot 2\;\mathrm{mm}^{2}$"
+            raw"$\left( 3\;\mathrm{mm} \right)^{2} - 4 \cdot 2\;\mathrm{mm}^{2}$"
     end
 end
 

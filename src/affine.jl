@@ -32,11 +32,14 @@ end
     if fmt isa SiunitxNumberFormatter
         env --> :raw
         return Expr(
-                    :latexifymerge, "\\qty{", NakedNumber(q.val), "}{", unitnames[(:siunitx, unitname)], "}"
-                   )
+            :latexifymerge,
+            "\\qty{",
+            NakedNumber(q.val),
+            "}{",
+            unitnames[(:siunitx, unitname)],
+            "}",
+        )
     end
     env --> :inline
-    return Expr(
-                :latexifymerge, q.val, "\\;\\mathrm{", unitnames[(:mathrm, unitname)], "}"
-               )
+    return Expr(:latexifymerge, q.val, "\\;\\mathrm{", unitnames[(:mathrm, unitname)], "}")
 end

@@ -31,13 +31,11 @@ using Latexify:
     StyledNumberFormatter,
     SiunitxNumberFormatter,
     AbstractNumberFormatter
-using LaTeXStrings:
-    LaTeXString
+using LaTeXStrings: LaTeXString
 
-import Latexify:
-    latexify
+import Latexify: latexify
 
-import Base.(:*)
+import Base.*
 
 export latexslashunitlabel, latexroundunitlabel, latexsquareunitlabel, latexfracunitlabel
 

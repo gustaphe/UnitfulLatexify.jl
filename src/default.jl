@@ -69,7 +69,7 @@ end
     return n.n
 end
 
-function(fmt::SiunitxNumberFormatter)(u::Unit)
+function (fmt::SiunitxNumberFormatter)(u::Unit)
     prefix = prefixes[(:siunitx, tens(u))]
     pow = power(u)
     unitname = getunitname(u, :siunitx)
@@ -101,20 +101,22 @@ function (fmt::SiunitxNumberFormatter)(q::AbstractQuantity)
 end
 function (::AbstractNumberFormatter)(q::AbstractQuantity)
     Expr(
-         :latexifymerge,
-         NakedNumber(q.val),
-         has_unit_spacing(unit(q)) ? "\\;" : nothing,
-         NakedUnits(unit(q)),
-        )
+        :latexifymerge,
+        NakedNumber(q.val),
+        has_unit_spacing(unit(q)) ? "\\;" : nothing,
+        NakedUnits(unit(q)),
+    )
 end
 (::SiunitxNumberFormatter)(n::NakedNumber) = PlainNumberFormatter(n.n)
-
 
 function insert_deprecated_unitformat!(kwargs)
     unitformat = pop!(kwargs, :unitformat, nothing)
     siunitxlegacy = pop!(kwargs, :siunitxlegacy, nothing)
     if ~isnothing(unitformat)
-        Base.depwarn("`unitformat` kwarg is deprecated, use e.g. `fmt=SiunitxNumberFormatter()` instead", :latexify)
+        Base.depwarn(
+            "`unitformat` kwarg is deprecated, use e.g. `fmt=SiunitxNumberFormatter()` instead",
+            :latexify,
+        )
         if unitformat === :mathrm
             kwargs[:fmt] = FancyNumberFormatter()
         end
@@ -123,7 +125,10 @@ function insert_deprecated_unitformat!(kwargs)
         end
     end
     if ~isnothing(siunitxlegacy)
-        Base.depwarn("`siunitxlegacy` kwarg is deprecated, use SiunitxNumberFormatter(version=1)` instead", :latexify)
+        Base.depwarn(
+            "`siunitxlegacy` kwarg is deprecated, use SiunitxNumberFormatter(version=1)` instead",
+            :latexify,
+        )
         fmt = get_formatter(kwargs)
         if fmt isa SiunitxNumberFormatter
             kwargs[:fmt] = SiunitxNumberFormatter(fmt.format_options, siunitxlegacy ? 1 : 3)

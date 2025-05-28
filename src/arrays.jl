@@ -5,10 +5,7 @@
     # Array of quantities with the same unit
     env --> :equation
     return Expr(
-        :latexifymerge,
-        ustrip.(a),
-        has_unit_spacing(first(a)) ? "\\;" : "",
-        unit(first(a)),
+        :latexifymerge, ustrip.(a), has_unit_spacing(first(a)) ? "\\;" : "", unit(first(a))
     )
 end
 
@@ -35,7 +32,7 @@ end
 end
 
 @latexrecipe function f( # Tuple{Quantity{U}}
-    l::Tuple{T,Vararg{T}}
+    l::Tuple{T,Vararg{T}},
 ) where {T<:AbstractQuantity{N,D,U}} where {N<:Number,D,U}
     insert_deprecated_unitformat!(kwargs)
     fmt = get_formatter(kwargs)
@@ -53,4 +50,3 @@ end
     end
     return collect(l)
 end
-
