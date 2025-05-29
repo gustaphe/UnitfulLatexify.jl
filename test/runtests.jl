@@ -6,16 +6,13 @@ using LaTeXStrings
 using Test
 using JuliaFormatter
 
-function unitfullatexifytest(
-    val,
-    mathrmexpected,
-    siunitxexpected,
-    #siunitxsimpleexpected,
-)
-    @test latexify(val; fmt=Latexify.FancyNumberFormatter()) ==
+function unitfullatexifytest(val, mathrmexpected, siunitxexpected, siunitxsimpleexpected)
+    @test latexify(val; fmt=FancyNumberFormatter()) ==
         LaTeXString(replace(mathrmexpected, "\r\n" => "\n"))
-    @test latexify(val; fmt=Latexify.SiunitxNumberFormatter()) ==
+    @test latexify(val; fmt=SiunitxNumberFormatter()) ==
         LaTeXString(replace(siunitxexpected, "\r\n" => "\n"))
+    @test latexify(val; fmt=SiunitxNumberFormatter(simple=true)) ==
+        LaTeXString(replace(siunitxsimpleexpected, "\r\n"=>"\n"))
 end
 
 @testset "Latexify units" begin
@@ -23,31 +20,22 @@ end
         u"H*J/kg",
         raw"$\mathrm{H}\,\mathrm{J}\,\mathrm{kg}^{-1}$",
         raw"\unit{\henry\joule\per\kilo\gram}",
-        #raw"\unit{H.J.kg^{-1}}",
+        raw"\unit{H.J.kg^{-1}}",
     )
     unitfullatexifytest(
         24.7e9u"Gm/s^2",
         raw"$2.47 \cdot 10^{10}\;\mathrm{Gm}\,\mathrm{s}^{-2}$",
         raw"\qty{2.47e10}{\giga\meter\per\second\tothe{2}}",
-        #raw"\qty{2.47e10}{Gm.s^{-2}}",
+        raw"\qty{2.47e10}{Gm.s^{-2}}",
     )
     unitfullatexifytest(
-        u"percent",
-        raw"$\mathrm{\%}$",
-        raw"\unit{\percent}",
-        #raw"\unit{\%}"
+        u"percent", raw"$\mathrm{\%}$", raw"\unit{\percent}", raw"\unit{\%}"
     )
     unitfullatexifytest(
-        2u"°C",
-        raw"$2\;\mathrm{^\circ C}$",
-        raw"\qty{2}{\celsius}",
-        #raw"\qty{2}{\celsius}"
+        2u"°C", raw"$2\;\mathrm{^\circ C}$", raw"\qty{2}{\celsius}", raw"\qty{2}{\celsius}"
     )
     unitfullatexifytest(
-        1u"°",
-        raw"$1\mathrm{^{\circ}}$",
-        raw"\qty{1}{\degree}",
-        #raw"\qty{1}{\degree}"
+        1u"°", raw"$1\mathrm{^{\circ}}$", raw"\qty{1}{\degree}", raw"\qty{1}{\degree}"
     )
     unitfullatexifytest(
         [1, 2, 3]u"m",
@@ -73,7 +61,7 @@ end
         \right]\;\unit{\meter}
         \end{equation}
         """,
-        #=raw"""
+        raw"""
         \begin{equation}
         \left[
         \begin{array}{c}
@@ -83,7 +71,7 @@ end
         \end{array}
         \right]\;\unit{m}
         \end{equation}
-        """,=#
+        """,
     )
     @test latexify(24.7e9u"Gm/s^2"; fmt="%.1e") ==
         L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
@@ -91,6 +79,8 @@ end
     @test latexify(5.9722e24u"kg"; fmt=SiunitxNumberFormatter(version=2)) ==
         raw"\SI{5.9722e24}{\kilo\gram}"
     @test latexify(u"eV"; fmt=SiunitxNumberFormatter(version=2)) == raw"\si{\electronvolt}"
+    @test_deprecated latexify(24.7e9u"Gm/s^2"; unitformat=:siunitx)
+    @test_deprecated latexify(24.7e9u"Gm/s^2"; siunitxlegacy=true)
 end
 
 @testset "permode" begin

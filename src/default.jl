@@ -34,6 +34,7 @@ end
     fmt = get_formatter(kwargs)
     unitlist = listunits(u.u)
     if fmt isa SiunitxNumberFormatter
+        fmt.simple && return Expr(:latexifymerge, intersperse(unitlist, ".")...)
         return Expr(:latexifymerge, unitlist...)
     end
     if permode === :power
@@ -69,19 +70,25 @@ end
     return n.n
 end
 
-function (fmt::SiunitxNumberFormatter)(u::Unit)
-    prefix = prefixes[(:siunitx, tens(u))]
-    pow = power(u)
-    unitname = getunitname(u, :siunitx)
-    per = pow < 0 ? "\\per" : ""
-    pow = abs(pow)
-    expo = pow == 1//1 ? "" : "\\tothe{$(latexify(pow; fmt="%g", env=:raw))}"
+function (fmt::SiunitxNumberFormatter)(p::Unit)
+    unitformat = fmt.simple ? :siunitxsimple : :siunitx
+    prefix = prefixes[(unitformat, tens(p))]
+    pow = power(p)
+    unitname = getunitname(p, unitformat)
+    if fmt.simple
+        per = ""
+        expo = pow == 1//1 ? "" : "^{$(latexify(pow; fmt="%g", env=:raw))}"
+    else
+        per = pow < 0 ? "\\per" : ""
+        pow = abs(pow)
+        expo = pow == 1//1 ? "" : "\\tothe{$(latexify(pow; fmt="%g", env=:raw))}"
+    end
     return LaTeXString("$per$prefix$unitname$expo")
 end
-function (fmt::AbstractNumberFormatter)(u::Unit)
-    prefix = prefixes[(:mathrm, tens(u))]
-    unitname = getunitname(u, :mathrm)
-    pow = power(u)
+function (fmt::AbstractNumberFormatter)(p::Unit)
+    prefix = prefixes[(:mathrm, tens(p))]
+    unitname = getunitname(p, :mathrm)
+    pow = power(p)
     expo = pow == 1//1 ? "" : "^{$(latexify(pow; fmt="%g", env=:raw))}"
     return LaTeXString("\\mathrm{$prefix$unitname}$expo")
 end
@@ -126,12 +133,12 @@ function insert_deprecated_unitformat!(kwargs)
     end
     if ~isnothing(siunitxlegacy)
         Base.depwarn(
-            "`siunitxlegacy` kwarg is deprecated, use SiunitxNumberFormatter(version=1)` instead",
+            "`siunitxlegacy` kwarg is deprecated, use SiunitxNumberFormatter(version=2)` instead",
             :latexify,
         )
         fmt = get_formatter(kwargs)
         if fmt isa SiunitxNumberFormatter
-            kwargs[:fmt] = SiunitxNumberFormatter(fmt.format_options, siunitxlegacy ? 1 : 3)
+            kwargs[:fmt] = SiunitxNumberFormatter(fmt.format_options, siunitxlegacy ? 2 : 3)
         end
     end
 end
