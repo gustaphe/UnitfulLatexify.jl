@@ -1,7 +1,7 @@
 name = "UnitfulLatexify"
 uuid = "45397f5d-5981-4c77-b2b3-fc36d6e9b728"
 authors = ["David Gustavsson <david.e.gustavsson@gmail.com> and contributors"]
-version = "1.6.4"
+version = "1.7.0"
 
 [deps]
 LaTeXStrings = "b964fa9f-0449-5b57-a5c2-d3ea65f4040f"
@@ -10,6 +10,6 @@ Unitful = "1986cc42-f94f-5a68-af5c-568840ba703d"
 
 [compat]
 LaTeXStrings = "1.2.0"
-Latexify = "0.15.1, 0.16"
+Latexify = "0.16.8"
 Unitful = "1.5.0"
 julia = "1"

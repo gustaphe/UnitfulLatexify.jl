@@ -3,12 +3,16 @@
 
 register(UnitfulLatexify)
 
-*(q::AbstractQuantity, ::Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}) = q
+function *(q::AbstractQuantity, ::Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing})
+    Base.depwarn("Unit `one` is no longer needed, just use the number directly.", :*)
+    q
+end
 function *(
     a::AbstractQuantity, b::T
 ) where {
     T<:AbstractQuantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
 }
+    Base.depwarn("Unit `one` is no longer needed, just use the number directly.", :*)
     return a * b.val
 end
 function *(
@@ -16,41 +20,26 @@ function *(
 ) where {
     T<:AbstractQuantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
 }
+    Base.depwarn("Unit `one` is no longer needed, just use the number directly.", :*)
     return b.val * a
 end
 
-@latexrecipe function f(p::T; unitformat=:mathrm) where {T<:Unit{:One,NoDims}}
+@latexrecipe function f(p::Unit{:One,NoDims})
     return ""
 end
 
-@latexrecipe function f(
-    p::T; unitformat=:mathrm
-) where {T<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
+@latexrecipe function f(p::Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing})
     return ""
 end
 
-@latexrecipe function f(
-    q::T; unitformat=:mathrm
-) where {T<:AbstractQuantity{<:Number,NoDims,<:Units{(),NoDims,nothing}}}
-    if unitformat === :mathrm
-        env --> :inline
-        fmt --> FancyNumberFormatter()
-        return ustrip(q)
-    end
-    env --> :raw
-    return Expr(:latexifymerge, "\\num{", ustrip(q), "}")
+@latexrecipe function f(q::AbstractQuantity{<:Number,NoDims,<:Units{(),NoDims,nothing}})
+    Base.depwarn("Unit `one` is no longer needed, just use the number directly.", :latexify)
+    return ustrip(q)
 end
 
 @latexrecipe function f(
-    q::T; unitformat=:mathrm
-) where {
-    T<:AbstractQuantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
-}
-    if unitformat === :mathrm
-        env --> :inline
-        fmt --> FancyNumberFormatter()
-        return ustrip(q)
-    end
-    env --> :raw
-    return Expr(:latexifymerge, "\\num{", ustrip(q), "}")
+    q::AbstractQuantity{<:Number,NoDims,<:Units{(Unit{:One,NoDims}(0, 1),),NoDims,nothing}}
+)
+    Base.depwarn("Unit `one` is no longer needed, just use the number directly.", :latexify)
+    return ustrip(q)
 end

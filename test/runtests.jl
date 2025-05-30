@@ -1,17 +1,18 @@
 using UnitfulLatexify
 using Unitful
 using Latexify
+using Latexify: FancyNumberFormatter, SiunitxNumberFormatter
 using LaTeXStrings
 using Test
 using JuliaFormatter
 
 function unitfullatexifytest(val, mathrmexpected, siunitxexpected, siunitxsimpleexpected)
-    @test latexify(val; unitformat=:mathrm) ==
+    @test latexify(val; fmt=FancyNumberFormatter()) ==
         LaTeXString(replace(mathrmexpected, "\r\n" => "\n"))
-    @test latexify(val; unitformat=:siunitx) ==
+    @test latexify(val; fmt=SiunitxNumberFormatter()) ==
         LaTeXString(replace(siunitxexpected, "\r\n" => "\n"))
-    @test latexify(val; unitformat=:siunitxsimple) ==
-        LaTeXString(replace(siunitxsimpleexpected, "\r\n" => "\n"))
+    @test latexify(val; fmt=SiunitxNumberFormatter(simple=true)) ==
+        LaTeXString(replace(siunitxsimpleexpected, "\r\n"=>"\n"))
 end
 
 @testset "Latexify units" begin
@@ -27,11 +28,12 @@ end
         raw"\qty{2.47e10}{\giga\meter\per\second\tothe{2}}",
         raw"\qty{2.47e10}{Gm.s^{-2}}",
     )
+    @test_deprecated latexify(6.02214076e23u"one")
     unitfullatexifytest(
         6.02214076e23u"one",
-        raw"$6.022 \cdot 10^{23}$",
-        raw"\num{6.02214076e23}",
-        raw"\num{6.02214076e23}",
+        latexify(6.02214076e23; fmt=FancyNumberFormatter()),
+        latexify(6.02214076e23; fmt=SiunitxNumberFormatter()),
+        latexify(6.02214076e23; fmt=SiunitxNumberFormatter()),
     )
     unitfullatexifytest(
         u"percent", raw"$\mathrm{\%}$", raw"\unit{\percent}", raw"\unit{\%}"
@@ -81,10 +83,11 @@ end
     @test latexify(24.7e9u"Gm/s^2"; fmt="%.1e") ==
         L"$2.5e+10\;\mathrm{Gm}\,\mathrm{s}^{-2}$"
 
-    @test latexify(5.9722e24u"kg"; unitformat=:siunitx, siunitxlegacy=true) ==
+    @test latexify(5.9722e24u"kg"; fmt=SiunitxNumberFormatter(version=2)) ==
         raw"\SI{5.9722e24}{\kilo\gram}"
-    @test latexify(u"eV"; unitformat=:siunitx, siunitxlegacy=true) ==
-        raw"\si{\electronvolt}"
+    @test latexify(u"eV"; fmt=SiunitxNumberFormatter(version=2)) == raw"\si{\electronvolt}"
+    @test_deprecated latexify(24.7e9u"Gm/s^2"; unitformat=:siunitx)
+    @test_deprecated latexify(24.7e9u"Gm/s^2"; siunitxlegacy=true)
 end
 
 @testset "permode" begin
@@ -101,8 +104,8 @@ end
     @test latexify(p; permode=:frac) == LaTeXString(
         raw"$5\;\frac{\mathrm{m}^{3}\,\mathrm{s}^{2}}{\mathrm{kg}^{4}\,\mathrm{H}}$"
     )
-    @test latexify(p; unitformat=:siunitx, permode=:frac) ==
-        latexify(p; unitformat=:siunitx)
+    @test latexify(p; permode=:frac, fmt=SiunitxNumberFormatter()) ==
+        latexify(p; fmt=SiunitxNumberFormatter())
     @test latexify(u"m"; permode=:frac) == latexify(u"m")
     @test latexify(u"m^-1"; permode=:frac) == LaTeXString(raw"$\frac{1}{\mathrm{m}}$")
     @test_throws ErrorException latexify(p; permode=:wrogn)
@@ -119,7 +122,7 @@ end
 @testset "Parentheses" begin
     if isdefined(Latexify, :_getoperation)
         @test @latexify($(3u"mm")^2 - 4 * $(2u"mm^2")) ==
-            raw"$\left( 3\;\mathrm{mm} \right)^2 - 4 \cdot 2\;\mathrm{mm}$"
+            raw"$\left( 3\;\mathrm{mm} \right)^{2} - 4 \cdot 2\;\mathrm{mm}^{2}$"
     end
 end
 

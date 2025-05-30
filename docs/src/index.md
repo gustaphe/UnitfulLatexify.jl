@@ -54,24 +54,13 @@ latexify([1, 2, 3]u"cm")
 
 If you are exporting your numbers to an actual LaTeX document, you will of
 course want to use the commands from `siunitx.sty` rather than the `\mathrm`
-style used by default. To this end, UnitfulLatexify introduces a keyword
-argument `unitformat` which is `:mathrm` per default, but can be set to
-`:siunitx` for `\qty{8}{\second\meter\per\kilo\gram}` style and `:siunitxsimple` for
+style used by default. To this end you can use Latexify's `fmt=SiunitxNumberFormatter` for `\qty{8}{\second\meter\per\kilo\gram}` style and `fmt=SiunitxNumberFormatter(simple=true)` for
 `\qty{8}{s.m/kg}`. Like other Latexify keywords, this can be set to be a default
-by using `set_default(unitformat=:siunitx)`, or given with each latexification
+by using `set_default(fmt=SiunitxNumberFormatter())`, or given with each latexification
 command:
 
 ```@example main
-latexify(612.2u"nm"; unitformat=:siunitx) # This will not render right without the `siunitx` package
-print(ans) # hide
-```
-
-### One
-
-`siunitx` can also render unitless numbers nicely by putting them in `\num` commands. As the Unitful `NoUnits` is so fragile, `UnitfulLatexify` exports a unit `u"one"` which stays with a quantity until it's combined with another unit. You'll have to invoke this manually:
-
-```@example main
-latexify(2e6u"one"; unitformat=:siunitx)
+latexify(612.2u"nm"; fmt=SiunitxNumberFormatter()) # This will not render right without the `siunitx` package
 print(ans) # hide
 ```
 
@@ -84,10 +73,9 @@ use `collect(x)` or `[x...]` to explicitly turn them into arrays first.
 ```@example main
 string.([
 latexify((1:5)u"m"),
-latexify((1:5)u"m"; unitformat=:siunitx),
-latexify(collect((1:5)u"m"); unitformat=:siunitx),
-latexify((1u"m", 2u"m", 3u"m"); unitformat=:siunitx),
-latexify((1:5)u"one"; unitformat=:siunitx),
+latexify((1:5)u"m"; fmt=SiunitxNumberFormatter()),
+latexify(collect((1:5)u"m"); fmt=SiunitxNumberFormatter()),
+latexify((1u"m", 2u"m", 3u"m"); fmt=SiunitxNumberFormatter()),
 ])
 ```
 
@@ -112,9 +100,6 @@ v = randn(10)u"m/s"
 plot(m, v; xguide="\\mathrm{mass}", yguide="v_x", unitformat=latexify)
 ```
 
-(note that this keyword argument `unitformat` is named the same by coincidence,
-but unrelated to the `unitformat` of `latexify`)
-
 This format, ``v_x\;/\;\mathrm{m}\,\mathrm{s}^{-1}``, is subject to personal
 preference. UnitfulLatexify offers a couple of other formats, and you can
 simply provide any two-argument function that turns a label and a unit into a
@@ -138,14 +123,14 @@ In mathrm-mode, one might prefer ``\mathrm{J}\,/\,\mathrm{kg}`` or
 ``\frac{\mathrm{J}}{\mathrm{kg}}`` over ``\mathrm{J}\,\mathrm{kg}^{-1}``. This
 can be achieved by supplying `permode=:slash` or `permode=:frac` respectively.
 
-These will have no effect in `siunitx` mode, because the latex package handles
+These will have no effect with `SiunitxNumberFormatter`, because the latex package handles
 this for you, and you can set it in your document.
 
 ## New siunitx syntax
 
 Starting from `v1.6`, the new syntax from `siunitx v3` (`\qty, \unit` rather
 than `\SI, \si`) is used. If you cannot upgrade `siunitx`, there's the option
-to use `siunitxlegacy=true`.
+to use `fmt=SiunitxNumberFormatter(version=2)`.
 
 ## A more complete list of defined units
 
