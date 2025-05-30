@@ -28,6 +28,13 @@ end
         raw"\qty{2.47e10}{\giga\meter\per\second\tothe{2}}",
         raw"\qty{2.47e10}{Gm.s^{-2}}",
     )
+    @test_deprecated latexify(6.02214076e23u"one")
+    unitfullatexifytest(
+        6.02214076e23u"one",
+        latexify(6.02214076e23; fmt=FancyNumberFormatter()),
+        latexify(6.02214076e23; fmt=SiunitxNumberFormatter()),
+        latexify(6.02214076e23; fmt=SiunitxNumberFormatter()),
+    )
     unitfullatexifytest(
         u"percent", raw"$\mathrm{\%}$", raw"\unit{\percent}", raw"\unit{\%}"
     )
