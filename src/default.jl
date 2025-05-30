@@ -3,14 +3,14 @@
 
     fmt = get_formatter(kwargs)
     env --> get_format_env(fmt)
-    return fmt(p)
+    return _transform(p, fmt)
 end
 
 @latexrecipe function f(u::Units; permode=:power)
     insert_deprecated_unitformat!(kwargs)
     fmt = get_formatter(kwargs)
     env --> get_format_env(fmt)
-    return fmt(u)
+    return _transform(u, fmt)
 end
 
 @latexrecipe function f(q::AbstractQuantity)
@@ -19,7 +19,7 @@ end
     env --> get_format_env(fmt)
     operation := :*
 
-    return fmt(q)
+    return _transform(q, fmt)
 end
 
 struct NakedUnits
@@ -70,7 +70,7 @@ end
     return n.n
 end
 
-function (fmt::SiunitxNumberFormatter)(p::Unit)
+function _transform(p::Unit, fmt::SiunitxNumberFormatter)
     unitformat = fmt.simple ? :siunitxsimple : :siunitx
     prefix = prefixes[(unitformat, tens(p))]
     pow = power(p)
@@ -85,7 +85,7 @@ function (fmt::SiunitxNumberFormatter)(p::Unit)
     end
     return LaTeXString("$per$prefix$unitname$expo")
 end
-function (fmt::AbstractNumberFormatter)(p::Unit)
+function _transform(p::Unit, fmt::AbstractNumberFormatter)
     prefix = prefixes[(:mathrm, tens(p))]
     unitname = getunitname(p, :mathrm)
     pow = power(p)
@@ -93,20 +93,17 @@ function (fmt::AbstractNumberFormatter)(p::Unit)
     return LaTeXString("\\mathrm{$prefix$unitname}$expo")
 end
 
-get_format_env(fmt::SiunitxNumberFormatter) = :raw
-get_format_env(fmt) = :inline
-
-function (fmt::SiunitxNumberFormatter)(u::Units)
+function _transform(u::Units, fmt::SiunitxNumberFormatter)
     opening = fmt.version < 3 ? "\\si{" : "\\unit{"
     return Expr(:latexifymerge, opening, NakedUnits(u), "}")
 end
-(::AbstractNumberFormatter)(u::Units) = Expr(:latexifymerge, NakedUnits(u))
+_transform(u::Units, ::AbstractNumberFormatter) = Expr(:latexifymerge, NakedUnits(u))
 
-function (fmt::SiunitxNumberFormatter)(q::AbstractQuantity)
+function _transform(q::AbstractQuantity, fmt::SiunitxNumberFormatter)
     opening = fmt.version < 3 ? "\\SI{" : "\\qty{"
     return Expr(:latexifymerge, opening, NakedNumber(q.val), "}{", NakedUnits(unit(q)), "}")
 end
-function (::AbstractNumberFormatter)(q::AbstractQuantity)
+function _transform(q::AbstractQuantity, ::AbstractNumberFormatter)
     Expr(
         :latexifymerge,
         NakedNumber(q.val),
@@ -114,7 +111,7 @@ function (::AbstractNumberFormatter)(q::AbstractQuantity)
         NakedUnits(unit(q)),
     )
 end
-(::SiunitxNumberFormatter)(n::NakedNumber) = PlainNumberFormatter(n.n)
+_transform(n::NakedNumber, ::SiunitxNumberFormatter) = PlainNumberFormatter(n.n)
 
 function insert_deprecated_unitformat!(kwargs)
     unitformat = pop!(kwargs, :unitformat, nothing)
@@ -150,3 +147,5 @@ function get_formatter(kwargs)
     end
     return fmt
 end
+get_format_env(fmt::SiunitxNumberFormatter) = :raw
+get_format_env(fmt) = :inline
