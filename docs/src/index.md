@@ -4,6 +4,13 @@ A glue package for [Unitful.jl](https://github.com/PainterQubits/Unitful.jl)
 and [Latexify.jl](https://github.com/korsbo/Latexify.jl), allowing easy and
 pretty latexification of Unitful quantities, numbers and units.
 
+## Deprecation
+
+As of Unitful.jl `XXX fill in here`, UnitfulLatexify is superceded by an extension to Unitful.
+Loading both Unitful and Latexify will automatically load this functionality.
+
+## Archival Examples
+
 The default usage is pretty intuitive:
 
 ```@example main
