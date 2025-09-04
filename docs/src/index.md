@@ -6,7 +6,7 @@ pretty latexification of Unitful quantities, numbers and units.
 
 ## Deprecation
 
-As of Unitful.jl `XXX fill in here`, UnitfulLatexify is superceded by an extension to Unitful.
+As of Unitful.jl 1.25, UnitfulLatexify is superceded by an extension to Unitful.
 Loading both Unitful and Latexify will automatically load this functionality.
 
 ## Archival Examples

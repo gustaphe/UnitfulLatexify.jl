@@ -8,7 +8,7 @@ julia> using Unitful, Latexify
 and all of this functionality will already be available.
 If you are updating code that used UnitfulLatexify, there are a few breaking changes to be aware of:
 
-- The `unitformat` keyword argument is replaced by the `fmt` keyword argument, which can be set to `FancyNumberFormatter()`, `SiunitxNumberFormatter()`., or `StyledNumberFormatter()`. 
+- The `unitformat` keyword argument to `latexify` is replaced by the `fmt` keyword argument, which can be set to `FancyNumberFormatter()`, `SiunitxNumberFormatter()`., or `StyledNumberFormatter()`. 
 - The `siunitxlegacy` keyword argument is replaced by the `version` keyword argument of `SiunitxNumberFormatter()`, where `2` is legacy and `3` is current.
 - The functions `latexslashunitlabel`, `latexroundunitlabel`, `latexsquareunitlabel`, and `latexfracunitlabel` no longer exist, and should be replaced as either:
     - First call `Latexify.set_default(labelformat=:slash)`, then use `latexify` directly
