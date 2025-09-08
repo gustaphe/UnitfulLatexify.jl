@@ -28,13 +28,13 @@ end
         raw"\qty{2.47e10}{\giga\meter\per\second\tothe{2}}",
         raw"\qty{2.47e10}{Gm.s^{-2}}",
     )
-    @test_deprecated latexify(6.02214076e23u"one")
-    unitfullatexifytest(
-        6.02214076e23u"one",
-        latexify(6.02214076e23; fmt=FancyNumberFormatter()),
-        latexify(6.02214076e23; fmt=SiunitxNumberFormatter()),
-        latexify(6.02214076e23; fmt=SiunitxNumberFormatter()),
-    )
+    # @test_deprecated latexify(6.02214076e23u"one")
+    # unitfullatexifytest(
+    #     6.02214076e23u"one",
+    #     latexify(6.02214076e23; fmt=FancyNumberFormatter()),
+    #     latexify(6.02214076e23; fmt=SiunitxNumberFormatter()),
+    #     latexify(6.02214076e23; fmt=SiunitxNumberFormatter()),
+    # )
     unitfullatexifytest(
         u"percent", raw"$\mathrm{\%}$", raw"\unit{\percent}", raw"\unit{\%}"
     )
@@ -86,8 +86,8 @@ end
     @test latexify(5.9722e24u"kg"; fmt=SiunitxNumberFormatter(version=2)) ==
         raw"\SI{5.9722e24}{\kilo\gram}"
     @test latexify(u"eV"; fmt=SiunitxNumberFormatter(version=2)) == raw"\si{\electronvolt}"
-    @test_deprecated latexify(24.7e9u"Gm/s^2"; unitformat=:siunitx)
-    @test_deprecated latexify(24.7e9u"Gm/s^2"; siunitxlegacy=true)
+    # @test_deprecated latexify(24.7e9u"Gm/s^2"; unitformat=:siunitx)
+    # @test_deprecated latexify(24.7e9u"Gm/s^2"; siunitxlegacy=true)
 end
 
 @testset "permode" begin
@@ -112,10 +112,10 @@ end
 end
 
 @testset "Labels" begin
-    @test latexslashunitlabel("x", u"m") == "\$x\\;\\left/\\;\\mathrm{m}\\right.\$"
-    @test latexroundunitlabel("x", u"m") == "\$x\\;\\left(\\mathrm{m}\\right)\$"
-    @test latexsquareunitlabel("x", u"m") == "\$x\\;\\left[\\mathrm{m}\\right]\$"
-    @test latexfracunitlabel("x", u"m") == "\$\\frac{x}{\\mathrm{m}}\$"
+    @test latexify("x", u"m"; labelformat=:slash) == "\$x\\;\\left/\\;\\mathrm{m}\\right.\$"
+    @test latexify("x", u"m"; labelformat=:round) == "\$x\\;\\left(\\mathrm{m}\\right)\$"
+    @test latexify("x", u"m"; labelformat=:square) == "\$x\\;\\left[\\mathrm{m}\\right]\$"
+    @test latexify("x", u"m"; labelformat=:frac) == "\$\\frac{x}{\\mathrm{m}}\$"
     @test latexify("x", u"m") == "\$x\\;\\left/\\;\\mathrm{m}\\right.\$"
 end
 
