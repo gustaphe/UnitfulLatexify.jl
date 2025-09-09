@@ -1,6 +1,4 @@
 using Documenter
-using UnitfulLatexify
-using LaTeXStrings
 
 makedocs(;
     sitename="UnitfulLatexify.jl",
