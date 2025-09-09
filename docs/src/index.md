@@ -9,141 +9,17 @@ pretty latexification of Unitful quantities, numbers and units.
 As of Unitful.jl 1.25, UnitfulLatexify is superceded by an extension to Unitful.
 Loading both Unitful and Latexify will automatically load this functionality.
 
-## Archival Examples
+This package is now empty, to prevent errors caused by loading it at the same time as the Unitful extension.
 
-The default usage is pretty intuitive:
-
-```@example main
-using Unitful, Latexify, UnitfulLatexify
-
-a = 9.82u"m/s^2"
-t = 4u"s"
-x = a*t^2
-
-latexify(x)
-```
-
-or more usefully:
-
-```@example main
-latexify(:(x = a*t^2 = $x))
-```
-
-This of course also works for `Units` objects by themselves:
-
-```@example main
-latexify(u"kg*m")
-```
-
-Some more usage examples:
-
-![](assets/examples.png)
-
-
-## Arrays
-
-Because Latexify is recursive, an array of unitful quantities is shown as
-expected:
-
-
-```@example main
-latexify([12u"m", 1u"m^2", 4u"m^3"])
-```
-
-A special case is an array where all elements have the same unit, and here
-UnitfulLatexify does some extra work:
-```@example main
-latexify([1, 2, 3]u"cm")
-```
-
-
-## siunitx.sty
-
-If you are exporting your numbers to an actual LaTeX document, you will of
-course want to use the commands from `siunitx.sty` rather than the `\mathrm`
-style used by default. To this end you can use Latexify's `fmt=SiunitxNumberFormatter` for `\qty{8}{\second\meter\per\kilo\gram}` style and `fmt=SiunitxNumberFormatter(simple=true)` for
-`\qty{8}{s.m/kg}`. Like other Latexify keywords, this can be set to be a default
-by using `set_default(fmt=SiunitxNumberFormatter())`, or given with each latexification
-command:
-
-```@example main
-latexify(612.2u"nm"; fmt=SiunitxNumberFormatter()) # This will not render right without the `siunitx` package
-print(ans) # hide
-```
-
-### Ranges and lists
-
-Another thing that `siunitx` does uniquely is lists and ranges of quantities.
-If you want the default behaviour of tuples and ranges to be printed as arrays,
-use `collect(x)` or `[x...]` to explicitly turn them into arrays first.
-
-```@example main
-string.([
-latexify((1:5)u"m"),
-latexify((1:5)u"m"; fmt=SiunitxNumberFormatter()),
-latexify(collect((1:5)u"m"); fmt=SiunitxNumberFormatter()),
-latexify((1u"m", 2u"m", 3u"m"); fmt=SiunitxNumberFormatter()),
-])
-```
-
-
-## Plots labels
-
-UnitfulLatexify also interfaces with `Plots` by way of implementing a two-argument `(label, unit)` recipe:
-
-```@example main
-latexify("v", u"km/s")
-```
-
-This enables this dreamlike example:
-
-```@example plot
-using Unitful, Plots, Latexify, UnitfulLatexify
-gr()
-default(fontfamily="Computer Modern")
-
-m = randn(10)u"kg"
-v = randn(10)u"m/s"
-plot(m, v; xguide="\\mathrm{mass}", yguide="v_x", unitformat=latexify)
-```
-
-This format, ``v_x\;/\;\mathrm{m}\,\mathrm{s}^{-1}``, is subject to personal
-preference. UnitfulLatexify offers a couple of other formats, and you can
-simply provide any two-argument function that turns a label and a unit into a
-string:
-
-```@example plot
-args = (m, v)
-kwargs = (xguide="\\mathrm{mass}", yguide="v_x", legend=false)
-plot(
-	plot(args...; kwargs..., unitformat=latexslashunitlabel),
-	plot(args...; kwargs..., unitformat=latexroundunitlabel),
-	plot(args...; kwargs..., unitformat=latexsquareunitlabel),
-	plot(args...; kwargs..., unitformat=latexfracunitlabel),
-	plot(args...; kwargs..., unitformat=(l, u)->string("\$", l, " \\rightarrow ", latexraw(u), "\$")),
-)
-```
-
-## Per-modes
-
-In mathrm-mode, one might prefer ``\mathrm{J}\,/\,\mathrm{kg}`` or
-``\frac{\mathrm{J}}{\mathrm{kg}}`` over ``\mathrm{J}\,\mathrm{kg}^{-1}``. This
-can be achieved by supplying `permode=:slash` or `permode=:frac` respectively.
-
-These will have no effect with `SiunitxNumberFormatter`, because the latex package handles
-this for you, and you can set it in your document.
-
-## New siunitx syntax
-
-Starting from `v1.6`, the new syntax from `siunitx v3` (`\qty, \unit` rather
-than `\SI, \si`) is used. If you cannot upgrade `siunitx`, there's the option
-to use `fmt=SiunitxNumberFormatter(version=2)`.
-
-## A more complete list of defined units
-
-Below is a poorly scraped list of units defined in `Unitful` and what comes out
-if you run it through `latexify`. Feel free to create an issue if there's a
-unit missing or being incorrectly rendered (and suggest a better ``\LaTeX``
-representation if you know one).
-
-![](assets/allunits.png)
+In updating code which previously used `UnitfulLatexify` explicitly, be aware of the following breaking changes:
+- The `unitformat` keyword argument to `latexify` is replaced by the `fmt` keyword argument, 
+which can be set to `FancyNumberFormatter()`, `SiunitxNumberFormatter()`., 
+or `StyledNumberFormatter()`. 
+- The `siunitxlegacy` keyword argument is replaced by the `version` keyword 
+argument of `SiunitxNumberFormatter()`, where `2` means legacy and `3` means current.",
+- The functions `latexslashunitlabel`, `latexroundunitlabel`, 
+`latexsquareunitlabel`, and `latexfracunitlabel` no longer exist, 
+and should be replaced as either:
+  - Direct substitute: `(l,u) -> latexify(l, u; labelformat=:slash)` 
+  	with `:slash`, `:round`, `:square`, or `:frac` 
+  - First call `Latexify.set_default(labelformat=:slash)`, then use `latexify`

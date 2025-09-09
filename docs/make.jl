@@ -2,8 +2,6 @@ using Documenter
 using UnitfulLatexify
 using LaTeXStrings
 
-Base.show(io::IO, mime::MIME"text/html", l::LaTeXString) = show(io, mime, l.s)
-
 makedocs(;
     sitename="UnitfulLatexify.jl",
     format=Documenter.HTML(;
@@ -15,4 +13,5 @@ makedocs(;
     checkdocs=:exports,
 )
 
-deploydocs(; devbranch="main", repo="github.com/gustaphe/UnitfulLatexify.jl.git")
+deploydocs(; devbranch="main", repo="github.com/gustaphe/UnitfulLatexify.jl.git", 
+    versions="dev" => "2.0", "1.7", "1.4")

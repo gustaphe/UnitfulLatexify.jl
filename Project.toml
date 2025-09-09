@@ -1,7 +1,7 @@
 name = "UnitfulLatexify"
 uuid = "45397f5d-5981-4c77-b2b3-fc36d6e9b728"
 authors = ["David Gustavsson <david.e.gustavsson@gmail.com> and contributors"]
-version = "1.8.0"
+version = "2.0.0"
 
 [deps]
 Latexify = "23fbe1c1-3f47-55db-b15f-69d7ec21a316"
