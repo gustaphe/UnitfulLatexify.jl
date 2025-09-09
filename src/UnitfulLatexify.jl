@@ -1,47 +1,12 @@
 module UnitfulLatexify
 
-using Unitful:
-    Unitful,
-    Unit,
-    Units,
-    AbstractQuantity,
-    AffineUnits,
-    AffineQuantity,
-    power,
-    abbr,
-    name,
-    tens,
-    sortexp,
-    unit,
-    @unit,
-    register,
-    NoDims,
-    ustrip,
-    @u_str,
-    genericunit,
-    has_unit_spacing
-using Latexify:
-    Latexify,
-    @latexrecipe,
-    latexify,
-    _latexarray,
-    latexraw,
-    FancyNumberFormatter,
-    PlainNumberFormatter,
-    StyledNumberFormatter,
-    SiunitxNumberFormatter,
-    AbstractNumberFormatter
-using LaTeXStrings: LaTeXString
-
-import Latexify: latexify
-
-import Base.*
-
-export latexslashunitlabel, latexroundunitlabel, latexsquareunitlabel, latexfracunitlabel
+import Unitful, Latexify
 
 function __init__()
     @warn """
         UnitfulLatexify is deprecated, and replaced with an extension on Unitful. 
+
+        The package is now empty, to prevent errors caused by loading it at the same time as the Unitful extension.
         
         ```
         using Unitful, Latexify
@@ -61,17 +26,6 @@ function __init__()
               with `:slash`, `:round`, `:square`, or `:frac` 
             - First call `Latexify.set_default(labelformat=:slash)`, then use `latexify`
         """
-    return register(UnitfulLatexify)
 end
-
-include("prefixes.jl")
-include("unitnames.jl")
-
-include("auxiliary.jl")
-include("default.jl")
-include("one.jl")
-include("arrays.jl")
-include("affine.jl")
-include("label.jl")
 
 end
