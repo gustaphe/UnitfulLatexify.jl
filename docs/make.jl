@@ -11,4 +11,4 @@ makedocs(;
 )
 
 deploydocs(; devbranch="main", repo="github.com/gustaphe/UnitfulLatexify.jl.git", 
-    versions="dev" => "2.0", "1.7", "1.4")
+    versions=["dev" => "2.0", "1.7", "1.4"])
