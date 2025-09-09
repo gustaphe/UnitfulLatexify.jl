@@ -5,7 +5,6 @@ makedocs(;
     format=Documenter.HTML(;
         prettyurls=get(ENV, "CI", nothing) == "true", mathengine=MathJax3()
     ),
-    modules=[UnitfulLatexify],
     doctest=false,
     pages=["index.md"],
     checkdocs=:exports,
